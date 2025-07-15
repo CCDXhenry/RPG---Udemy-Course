@@ -1,0 +1,72 @@
+# Unity 项目标准忽略规则
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# 内存捕获文件
+/[Mm]emoryCaptures/
+
+# 自动生成的文件
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity 资产元数据
+*.meta
+*.meta.*
+
+# 项目设置
+/ProjectSettings/ProjectVersion.txt
+/ProjectSettings/EditorBuildSettings.asset
+
+# 插件特定文件
+/[Aa]ssets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# 自动保存文件
+~*
+
+# OS 生成文件
+.DS_Store
+Thumbs.db
+
+# ================
+# Unity 包管理器
+# ================
+[Pp]ackages/  # 忽略目录
+![Pp]ackages/manifest.json  # 包含文件
+![Pp]ackages/packages-lock.json
+![Pp]ackages/*.meta  # 包含所有 meta 文件
+
+# 但排除目录本身
+!Packages/
+!packages/
+
+# 排除所有 .asset 文件但不排除文件夹
+*.asset
+!**/*.asset.meta
+
+# Visual Studio 临时文件
+.vs/
+*.vsidx
+*.vspx
+*.vspscc
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
