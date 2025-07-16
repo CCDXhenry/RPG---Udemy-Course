@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class Enemy : Entity
@@ -13,6 +14,7 @@ public class Enemy : Entity
 
     [Header("Move Info")]
     public float moveSpeed;
+    private float originalMoveSpeed;
     public float idleTime;
 
     [Header("Attack Info")]
@@ -33,6 +35,7 @@ public class Enemy : Entity
     {
         base.Awake();
         stateMachine = new EnemyStateMachine();
+        originalMoveSpeed = moveSpeed;
     }
 
     protected override void Start()
@@ -44,6 +47,27 @@ public class Enemy : Entity
     {
         base.Update();
         stateMachine.currentState.Update();
+    }
+
+    public virtual void FreezeTimer(bool _timeFroze)
+    {
+        if (_timeFroze)
+        {
+            moveSpeed = 0f;
+            anim.speed = 0f;
+        }
+        else
+        {
+            moveSpeed = originalMoveSpeed;
+            anim.speed = 1;
+        }
+    }
+
+    protected virtual IEnumerator FreezeTimerFor(float _second)
+    {
+        FreezeTimer(true);
+        yield return new WaitForSeconds(_second);
+        FreezeTimer(false);
     }
 
     public virtual void OpenCounterAttackWindow()

@@ -50,7 +50,8 @@ public class PlayerGroundedState : PlayerState
         {
             return true;
         }
-        player.sword.GetComponent<Sword_Skill_Controller>().ReturnSword();
+        Sword_Skill_Controller ssc = player.sword.GetComponent<Sword_Skill_Controller>();
+        ssc.ReturnSword();
         return false;
     }
 }

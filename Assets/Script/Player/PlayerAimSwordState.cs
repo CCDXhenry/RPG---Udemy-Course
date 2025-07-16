@@ -18,6 +18,7 @@ public class PlayerAimSwordState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        player.StartCoroutine("BusyFor", .2f);
     }
 
     public override void Update()
@@ -27,6 +28,17 @@ public class PlayerAimSwordState : PlayerState
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
             stateMachine.ChangeState(player.idleState);
+        }
+
+        //人物朝向鼠标位置
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if(mousePos.x > player.transform.position.x && player.facingDirection == -1)
+        {
+            player.Flip();
+        }
+        else if(mousePos.x < player.transform.position.x && player.facingDirection == 1)
+        {
+            player.Flip();
         }
     }
 }

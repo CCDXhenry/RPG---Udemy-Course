@@ -20,7 +20,8 @@ public class Player : Entity
     public float counterAttackDuration;
     public SkillManager skill { get;private set; }
 
-    public GameObject sword ;//{ get; private set; }
+    public GameObject sword { get; private set; }
+    public float swordReturnImpact = 10f; // Placeholder for future sword return impact
 
     #region States
 
@@ -75,8 +76,9 @@ public class Player : Entity
         sword = _newSword;
     }
 
-    public void ClearSword()
+    public void CatchSword()
     {
+        stateMachine.ChangeState(catchSwordState);
         Destroy(sword);
     }
 
