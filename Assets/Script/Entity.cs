@@ -9,9 +9,12 @@ public class Entity : MonoBehaviour
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
     public EntityFX fx { get; private set; } // Placeholder for future FX
+
+    public SpriteRenderer sr { get; private set; } // Placeholder for future sprite effects
+
     #endregion
 
-    [Header("Collision info")] 
+    [Header("Collision info")]
     public Transform attackCheck;
     public float attackCheckRadius;
     [SerializeField] public LayerMask groundLayer;
@@ -26,7 +29,7 @@ public class Entity : MonoBehaviour
     private bool facingRight = true;
     public int facingDirection { get; private set; } = 1; // 1 for right, -1 for left
 
-    [Header("Knockback info")] 
+    [Header("Knockback info")]
     [SerializeField] public Vector2 knockbackDirection;
     [SerializeField] public float knockbackDuration;
     public bool isKnocked;
@@ -34,19 +37,20 @@ public class Entity : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Awake()
     {
-        
+
     }
     protected virtual void Start()
     {
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        fx = GetComponentInChildren<EntityFX>();
+        fx = GetComponent<EntityFX>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        
+
     }
 
     public virtual void Damage()
@@ -62,6 +66,17 @@ public class Entity : MonoBehaviour
         rb.velocity = new Vector2(knockbackDirection.x * -facingDirection, knockbackDirection.y);
         yield return new WaitForSeconds(knockbackDuration);
         isKnocked = false;
+    }
+
+    //人物震动协程
+    protected IEnumerator Vibrate(float duration)
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime < duration)
+        {
+            transform.position = new Vector3(transform.position.x + Random.Range(-0.05f, 0.05f), transform.position.y + Random.Range(-0.05f, 0.05f), transform.position.z);
+            yield return null;
+        }
     }
 
     public void SetVelocity(float x, float y)
@@ -100,6 +115,18 @@ public class Entity : MonoBehaviour
         else if (x < 0 && facingRight)
         {
             Flip();
+        }
+    }
+
+    public void MakeTransparent(bool _transparent)
+    {
+        if (_transparent)
+        {
+            sr.color = Color.clear;
+        }
+        else
+        {
+            sr.color = Color.white;
         }
     }
 }

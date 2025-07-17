@@ -21,6 +21,10 @@ public class PlayerGroundedState : PlayerState
     public override void Update()
     {
         base.Update();
+        if (Input.GetKeyDown(KeyCode.R) && SkillManager.instance.blackhole.CanUseSkill(false))
+        {
+            stateMachine.ChangeState(player.blackholeState);
+        }
         if (Input.GetKeyDown(KeyCode.Mouse1) && HasNoSword())
         {
             stateMachine.ChangeState(player.aimSwordState);

@@ -1,3 +1,4 @@
+using Assets.Script.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,7 @@ public class Player : Entity
     public PlayerCounterAttackState counterAttackState { get; private set; } // Placeholder for future counter attack state
     public PlayerAimSwordState aimSwordState { get; private set; } // Placeholder for future aim sword state
     public PlayerCatchSwordState catchSwordState { get; private set; } // Placeholder for future catch sword state
+    public PlayerBlackholeState blackholeState { get; private set; } // Placeholder for future blackhole state
     #endregion
 
     protected override void Awake()
@@ -55,6 +57,7 @@ public class Player : Entity
         counterAttackState = new PlayerCounterAttackState(stateMachine, this, "CounterAttack"); // Placeholder for future counter attack state
         aimSwordState = new PlayerAimSwordState(stateMachine, this, "AimSword"); // Placeholder for future aim sword state
         catchSwordState = new PlayerCatchSwordState(stateMachine, this, "CatchSword"); // Placeholder for future catch sword state
+        blackholeState = new PlayerBlackholeState(stateMachine, this, "Jump"); // Placeholder for future blackhole state
     }
 
     protected override void Start()
@@ -77,7 +80,7 @@ public class Player : Entity
     }
 
     public void CatchSword()
-    {
+    {        
         stateMachine.ChangeState(catchSwordState);
         Destroy(sword);
     }
@@ -95,7 +98,7 @@ public class Player : Entity
 
     public void CheckForDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && skill.dash.CanUseSkill())
+        if (Input.GetKeyDown(KeyCode.LeftShift) && skill.dash.CanUseSkill(true))
         {
             dashDir = Input.GetAxisRaw("Horizontal");
             if (dashDir == 0) // If no horizontal input, default to facing direction

@@ -8,14 +8,14 @@ public class Clone_Skill : Skill
     [SerializeField] private float colorDuration;
     [Space]
     [SerializeField] private bool canAttack; 
-    public void CreateClone(Transform _cloneTransform)
+    public void CreateClone(Transform _cloneTransform,Vector3 _offset)
     {
         if (clonePrefab != null)
         {
             // Instantiate the clone at the player's position and rotation
             GameObject newClone = Instantiate(clonePrefab);
             
-            newClone.GetComponent<Clone_Skill_Controller>().SetupClone(_cloneTransform, colorDuration, canAttack);
+            newClone.GetComponent<Clone_Skill_Controller>().SetupClone(_cloneTransform, colorDuration, canAttack, _offset);
         }
         else
         {

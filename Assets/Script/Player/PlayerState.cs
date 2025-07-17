@@ -12,6 +12,7 @@ public class PlayerState
     public float stateTime;
     public bool triggerCalled;
     protected Rigidbody2D rb;
+    protected bool skillIsUsed = false;
     public PlayerState(PlayerStateMachine stateMachine, Player player, string animBoolName)
     {
         this.stateMachine = stateMachine;

@@ -34,7 +34,7 @@ public class SkeletonBattleState : EnemyState
         else
             moveDir = -1; // Move left
         enemy.SetVelocity(enemy.moveSpeed * moveDir, rb.velocity.y);
-        Debug.Log(CanAttack());
+        //Debug.Log(CanAttack());
         if (enemy.IsPlayerDetected())
         {
             stateTime = enemy.battleTime;

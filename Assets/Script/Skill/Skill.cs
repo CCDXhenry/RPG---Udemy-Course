@@ -17,18 +17,23 @@ public class Skill : MonoBehaviour
         cooldownTimer -= Time.deltaTime;
     }
 
-    public virtual bool CanUseSkill()
+    public virtual bool CanUseSkill(bool _isUseSkill)
     {
         if (cooldownTimer <= 0)
         {
             // Implement skill logic here
             Debug.Log("Skill used!");
-            UseSkill();
-            cooldownTimer = cooldown; // Reset cooldown timer
+            //是否直接使用技能
+            if (_isUseSkill)
+            {
+                UseSkill();
+                cooldownTimer = cooldown; // Reset cooldown timer
+            }               
             return true;
         }
         
         Debug.Log("Skill is on cooldown!");
+        player.StartCoroutine("Vibrate", 0.2f);
         return false;
     }
 
