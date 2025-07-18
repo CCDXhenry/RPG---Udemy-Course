@@ -21,12 +21,15 @@ namespace Assets.Script.Player
             upwardForce = 15f; // 设置向上移动的速度
             skillIsUsed = false;
             stateTime = flyTime; // 初始化状态时间为飞行时间
+
+            player.isBusy = true; // 设置玩家为忙碌状态
         }
 
         public override void Exit()
         {
             base.Exit();
             rb.gravityScale = originalGravity;
+            player.isBusy = false; // 退出状态时将玩家设置为非忙碌状态
         }
 
         public override void Update()
@@ -44,7 +47,7 @@ namespace Assets.Script.Player
                     skillIsUsed = player.skill.blackhole.CanUseSkill(true);
             }
 
-            if (skillIsUsed && !player.skill.blackhole.blackholeController.isBlackholeActive)
+            if (skillIsUsed && player.skill.blackhole.SkillCompleted())
             {
                 stateMachine.ChangeState(player.idleState);
             }

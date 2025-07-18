@@ -33,7 +33,7 @@ public class Skill : MonoBehaviour
         }
         
         Debug.Log("Skill is on cooldown!");
-        player.StartCoroutine("Vibrate", 0.2f);
+        player.StartCoroutine(player.Vibrate(0.2f));
         return false;
     }
 

@@ -55,8 +55,12 @@ public class Clone_Skill_Controller : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
         foreach (var hit in colliders)
         {
-            if (hit.GetComponent<Enemy>() != null)
-                hit.GetComponent<Enemy>().Damage();
+            if (hit.TryGetComponent(out Enemy enemy))
+            {
+                int damageFacingDirection = (transform.position.x > enemy.transform.position.x) ? -1 : 1;
+                enemy.Damage(Vector2.zero, damageFacingDirection);
+            }
+                
         }
     }
 

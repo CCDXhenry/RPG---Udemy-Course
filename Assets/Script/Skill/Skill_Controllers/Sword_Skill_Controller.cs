@@ -232,7 +232,8 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     private void SwordSkillDamage(Enemy enemy)
     {
-        enemy.Damage(); // 如果碰撞物体是敌人，调用其伤害方法
+        int SwordFacingDirection = ( transform.position.x > enemy.transform.position.x ) ? -1 : 1;
+        enemy.Damage(Vector2.zero, SwordFacingDirection); // 如果碰撞物体是敌人，调用其伤害方法
         enemy.StartCoroutine("FreezeTimerFor", freezeTimeDuration); // 冻结敌人
     }
 

@@ -17,7 +17,19 @@ public class Player : Entity
     [Header("Attack info")]
     public int comboCounts = 0;
     [SerializeField] public Vector2[] attackMovement;
-    public bool isBusy;
+
+    //人物忙碌状态
+    private bool _isBusy;
+    public bool isBusy
+    {
+        get => _isBusy;
+        set
+        {
+            _isBusy = value;
+        }
+    }
+    private bool isVibrating = false; // 震动状态标志
+
     public float counterAttackDuration;
     public SkillManager skill { get;private set; }
 
@@ -72,6 +84,10 @@ public class Player : Entity
         base.Update();
         stateMachine.currentState.Update();
         CheckForDashInput();
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            SkillManager.instance.crystal.CanUseSkill(true);
+        }
     }
 
     public void AssignNewSword(GameObject _newSword)
@@ -98,8 +114,10 @@ public class Player : Entity
 
     public void CheckForDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && skill.dash.CanUseSkill(true))
+        if (Input.GetKeyDown(KeyCode.LeftShift)  && !isBusy)
         {
+            if(!skill.dash.CanUseSkill(true))
+                return; // 如果技能不可用，直接返回
             dashDir = Input.GetAxisRaw("Horizontal");
             if (dashDir == 0) // If no horizontal input, default to facing direction
             {
@@ -107,5 +125,33 @@ public class Player : Entity
             }
             stateMachine.ChangeState(dashState);
         }
+    }
+
+    //人物震动协程
+    public  IEnumerator Vibrate(float duration)
+    {
+        if (isVibrating) yield break;
+        isVibrating = true;
+        stateMachine.ChangeState(idleState);
+        StartCoroutine(BusyFor(duration));
+        Vector3 originalPosition = transform.position; // 值类型复制，后续不再更新
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            // 随机偏移X轴
+            transform.position = new Vector3(
+                originalPosition.x + Random.Range(-0.05f, 0.05f),
+                transform.position.y,
+                transform.position.z
+            );
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = new Vector3(originalPosition.x, transform.position.y, transform.position.z); // 精确还原
+        yield return new WaitForSeconds(0.5f); // 短暂停顿
+        isVibrating = false; // 重置震动状态
     }
 }

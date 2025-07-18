@@ -44,16 +44,12 @@ public class Blackhole_Skill_Controller : MonoBehaviour
         canGrow = true; // 初始状态允许增长
         canShrink = false; // 初始状态不允许缩小
         cloneTimer = 0f; // 初始化克隆计时器
-        cloneInterval = 0.5f; // 设置克隆间隔时间
+        //cloneInterval = blackholeDuration / cloneCounts; // 设置克隆间隔时间()
+        cloneInterval = 0;
         remainingCloneCount = cloneCounts; // 初始化剩余克隆计数
         isTransparable = false;
     }
-    //private void Start()
-    //{
-    //    hotKeyPrefab = Instantiate(hotKeyPrefab);
-    //    hotKeyPrefab.SetActive(false);
-    //    DontDestroyOnLoad(hotKeyPrefab);
-    //}
+
     private void Update()
     {
         blackholeTimer -= Time.deltaTime; // 减少黑洞计时器
@@ -79,6 +75,14 @@ public class Blackhole_Skill_Controller : MonoBehaviour
                 {
                     PlayerManager.instance.player.MakeTransparent(true); // 使玩家透明
                     isTransparable = true;
+
+                    //根据已按热键数量增加克隆数量
+                    if (targets.Count > 0)
+                    {
+                        remainingCloneCount += targets.Count; // 增加克隆计数
+                        cloneInterval = Mathf.Min(blackholeTimer / remainingCloneCount, 0.5f); // 重新计算克隆间隔时间
+                    }
+                    DestroyHotKeys(); // 销毁所有热键
                 }
                 cloneTimer -= Time.deltaTime;
                 if (cloneTimer <= 0)
@@ -92,38 +96,31 @@ public class Blackhole_Skill_Controller : MonoBehaviour
                     cloneTimer = cloneInterval;
                 }
             }
+            if (targets.Count <= 0 || remainingCloneCount <= 0)
+            {
+                DestroyHotKeys(); // 销毁所有热键
+                canShrink = true; // 如果没有目标或克隆计数用完，允许缩小
+            }
         }
 
         if (canShrink)
         {
-            if (isTransparable)
-            {
-                StartCoroutine(ExecuteAfterDelay(0.2f));
-                DestroyHotKeys(); // 销毁所有热键
-                isTransparable = false;
-                isBlackholeActive = false; // 设置黑洞技能为非激活状态
-            }
+            //DestroyHotKeys(); // 销毁所有热键
             transform.localScale = Vector2.Lerp(transform.localScale, new Vector2(-1, -1), shrinkSpeed * Time.deltaTime);
-            if (transform.localScale.x <= 0.1f)
+            if (transform.localScale.x <= 0.5f)
             {
-                canShrink = false; // 当缩小到一定程度后停止缩小
+                FinishBlackholeAbility();
+                isBlackholeActive = false; // 设置黑洞技能为非激活状态
+
                 Destroy(gameObject); // 销毁黑洞技能对象
             }
         }
     }
-    
-    IEnumerator ExecuteAfterDelay(float delay)
-    {
-        Debug.Log("协程开始执行，等待 " + delay + " 秒");
-        yield return new WaitForSeconds(delay);
-        Debug.Log("协程等待结束，准备调用 FinishBlackholeAbility");
-        FinishBlackholeAbility();
-    }
+
     private void FinishBlackholeAbility()
     {
-        Debug.Log("FinishBlackholeAbility is trigger");
         PlayerManager.instance.player.MakeTransparent(false);
-    }   
+    }
 
     public void DestroyHotKeys()
     {

@@ -34,4 +34,14 @@ public class Blackhole_Skill : Skill
         CreateBlackhole(); // 调用创建黑洞的方法
     }
 
+    public bool SkillCompleted()
+    {
+        if (!blackholeController.isBlackholeActive)
+        {
+            blackholeController = null; // 清除黑洞控制器实例
+            return true;
+        }
+        return false;
+    }
+
 }

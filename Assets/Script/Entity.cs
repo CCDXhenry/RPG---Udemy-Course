@@ -30,8 +30,8 @@ public class Entity : MonoBehaviour
     public int facingDirection { get; private set; } = 1; // 1 for right, -1 for left
 
     [Header("Knockback info")]
-    [SerializeField] public Vector2 knockbackDirection;
-    [SerializeField] public float knockbackDuration;
+    public Vector2 knockbackVector;
+    public float knockbackDuration;
     public bool isKnocked;
 
     // Start is called before the first frame update
@@ -53,31 +53,24 @@ public class Entity : MonoBehaviour
 
     }
 
-    public virtual void Damage()
+    public virtual void Damage(Vector2 _knockbackVector,int facingDirection)
     {
-        Debug.Log(gameObject.name + " was damage");
+        if(_knockbackVector == Vector2.zero)
+            _knockbackVector = knockbackVector;
+
+        Debug.Log(gameObject.name + " was damage " + _knockbackVector);
         fx.StartCoroutine("FlashFX");
-        StartCoroutine("HitKnockback");
+        StartCoroutine(HitKnockback(_knockbackVector, facingDirection));
     }
 
-    protected virtual IEnumerator HitKnockback()
+    protected virtual IEnumerator HitKnockback(Vector2 _knockbackDirection,int facingDirection)
     {
         isKnocked = true;
-        rb.velocity = new Vector2(knockbackDirection.x * -facingDirection, knockbackDirection.y);
+        rb.velocity = new Vector2(_knockbackDirection.x * facingDirection, _knockbackDirection.y);
         yield return new WaitForSeconds(knockbackDuration);
         isKnocked = false;
     }
 
-    //人物震动协程
-    protected IEnumerator Vibrate(float duration)
-    {
-        float startTime = Time.time;
-        while (Time.time - startTime < duration)
-        {
-            transform.position = new Vector3(transform.position.x + Random.Range(-0.05f, 0.05f), transform.position.y + Random.Range(-0.05f, 0.05f), transform.position.z);
-            yield return null;
-        }
-    }
 
     public void SetVelocity(float x, float y)
     {
