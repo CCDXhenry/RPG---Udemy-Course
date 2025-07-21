@@ -1,0 +1,56 @@
+# 顶级配置文件，阻止向上查找其他 .editorconfig 文件
+root = true
+
+###############################
+# 通用编码与基础格式设置
+###############################
+[*]
+charset = utf-8              # 强制所有文件使用 UTF-8 编码（无 BOM）[1](@ref)[3](@ref)[5](@ref)
+end_of_line = lf             # 使用 LF 换行符（Unix 风格，兼容跨平台）[1](@ref)[6](@ref)
+insert_final_newline = true  # 文件末尾必须包含空行[1](@ref)[4](@ref)
+trim_trailing_whitespace = true # 自动删除行尾空格[4](@ref)[5](@ref)
+
+# 缩进基础规则（可被后续文件类型覆盖）
+indent_style = space         # 默认使用空格缩进[1](@ref)[3](@ref)
+indent_size = 4             # 默认缩进 4 个空格[3](@ref)
+
+###############################
+# Unity 项目特定文件类型配置
+###############################
+# C# 脚本（Unity 主要代码文件）
+[*.cs]
+indent_size = 4             # C# 标准缩进 4 空格[3](@ref)
+max_line_length = 130       # 推荐行宽限制（可调整）[1](@ref)
+
+# Shader 文件
+[*.shader]
+[*.cginc]
+indent_size = 4             # 与 C# 保持一致[3](@ref)
+
+# 配置文件（JSON/YAML）
+[*.json]
+indent_size = 2             # JSON 常用 2 空格缩进[3](@ref)[7](@ref)
+max_line_length = off       # 允许长行（如打包后的 JSON）
+
+[*.yaml]
+[*.yml]
+indent_size = 2             # YAML 标准缩进[3](@ref)[7](@ref)
+
+# Markdown 文档（如 README）
+[*.md]
+trim_trailing_whitespace = false # 保留行尾空格（Markdown 语法可能需要）[1](@ref)[7](@ref)
+max_line_length = off       # 不限制行宽[1](@ref)
+
+###############################
+# 其他 Unity 相关文件
+###############################
+# 文本文件（如 .txt、.meta）
+[*.txt]
+[*.meta]
+charset = utf-8             # 显式声明编码[3](@ref)
+
+# 二进制文件排除（避免误处理）
+[*.png]
+[*.fbx]
+[*.asset]
+charset = unset             # 不处理二进制文件编码

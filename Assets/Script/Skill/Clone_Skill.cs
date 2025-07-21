@@ -5,7 +5,7 @@ using UnityEngine;
 public class Clone_Skill : Skill
 {
     [SerializeField] private GameObject clonePrefab; // The prefab for the clone
-    [SerializeField] private float colorDuration;
+    [SerializeField] private float cloneDuration;
     [Space]
     [SerializeField] private bool canAttack; 
     public void CreateClone(Transform _cloneTransform,Vector3 _offset)
@@ -15,7 +15,7 @@ public class Clone_Skill : Skill
             // Instantiate the clone at the player's position and rotation
             GameObject newClone = Instantiate(clonePrefab);
             
-            newClone.GetComponent<Clone_Skill_Controller>().SetupClone(_cloneTransform, colorDuration, canAttack, _offset);
+            newClone.GetComponent<Clone_Skill_Controller>().SetupClone(_cloneTransform, cloneDuration, canAttack, _offset);
         }
         else
         {
