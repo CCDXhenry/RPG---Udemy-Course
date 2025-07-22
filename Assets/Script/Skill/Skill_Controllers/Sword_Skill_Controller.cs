@@ -7,40 +7,40 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class Sword_Skill_Controller : MonoBehaviour
 {
-    [SerializeField] private float returnSpeed = 10f; //ËÙ¶È    
+    [SerializeField] private float returnSpeed = 10f; //é€Ÿåº¦    
     private Animator anim;
     private Rigidbody2D rb;
     private CircleCollider2D cr;
     private Player player;
     private bool canRotate = true;
     private bool isReturning = false;
-    [SerializeField] private float freezeTimeDuration = 0.6f; //¶³½áÊ±¼ä
+    [SerializeField] private float freezeTimeDuration = 0.6f; //å†»ç»“æ—¶é—´
 
-    //·´µ¯
+    //åå¼¹
     [Header("Bounce info")]
-    [SerializeField] private float bounceSpeed = 10f; //·´µ¯ËÙ¶È
-    private bool isBouncing; //ÊÇ·ñÕıÔÚ·´µ¯
-    private int bounceCount; //·´µ¯´ÎÊı
-    private List<Transform> enemyTargets; //µĞÈËÄ¿±êÁĞ±í
-    private int currentTargetIndex = 0; //µ±Ç°Ä¿±êË÷Òı
-    [SerializeField] private float bounceRadius = 5f; //·´µ¯°ë¾¶
+    [SerializeField] private float bounceSpeed = 10f; //åå¼¹é€Ÿåº¦
+    private bool isBouncing; //æ˜¯å¦æ­£åœ¨åå¼¹
+    private int bounceCount; //åå¼¹æ¬¡æ•°
+    private List<Transform> enemyTargets; //æ•Œäººç›®æ ‡åˆ—è¡¨
+    private int currentTargetIndex = 0; //å½“å‰ç›®æ ‡ç´¢å¼•
+    [SerializeField] private float bounceRadius = 5f; //åå¼¹åŠå¾„
 
-    //´©´Ì
+    //ç©¿åˆº
     [Header("Pierce info")]
-    private int pierceCount; //´©Í¸´ÎÊı
+    private int pierceCount; //ç©¿é€æ¬¡æ•°
 
-    //Ğı×ª
+    //æ—‹è½¬
     [Header("Spin info")]
-    private bool isSpinning = false; //ÊÇ·ñÕıÔÚĞı×ª
-    private bool wasStopped = false; //ÊÇ·ñ±»Í£Ö¹
-    private float maxTravelDistance = 10f; //×î´óÒÆ¶¯¾àÀë
-    private float spinDuration = 2f; //Ğı×ª³ÖĞøÊ±¼ä
-    private float spinTimer = 0f; //Ğı×ª¼ÆÊ±Æ÷
-    private float hitRadius = 0.5f; //ÃüÖĞ°ë¾¶
-    private float hitCooldown = 0.5f; //ÃüÖĞÀäÈ´Ê±¼ä
-    private float hitTimer = 0f;// ÃüÖĞ¼ÆÊ±Æ÷
-    private float spinMoveDistance = 1f; //ÒÆ¶¯Æ«ÒÆÁ¿
-    private float spinMoveSpeed = 1.2f; //ÒÆ¶¯ËÙ¶È
+    private bool isSpinning = false; //æ˜¯å¦æ­£åœ¨æ—‹è½¬
+    private bool wasStopped = false; //æ˜¯å¦è¢«åœæ­¢
+    private float maxTravelDistance = 10f; //æœ€å¤§ç§»åŠ¨è·ç¦»
+    private float spinDuration = 2f; //æ—‹è½¬æŒç»­æ—¶é—´
+    private float spinTimer = 0f; //æ—‹è½¬è®¡æ—¶å™¨
+    private float hitRadius = 0.5f; //å‘½ä¸­åŠå¾„
+    private float hitCooldown = 0.5f; //å‘½ä¸­å†·å´æ—¶é—´
+    private float hitTimer = 0f;// å‘½ä¸­è®¡æ—¶å™¨
+    private float spinMoveDistance = 1f; //ç§»åŠ¨åç§»é‡
+    private float spinMoveSpeed = 1.2f; //ç§»åŠ¨é€Ÿåº¦
 
 
     private void Awake()
@@ -55,19 +55,19 @@ public class Sword_Skill_Controller : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //ÉèÖÃ½£µÄ³õÊ¼·½Ïò¡¢ÖØÁ¦ºÍÍæ¼Ò
+    //è®¾ç½®å‰‘çš„åˆå§‹æ–¹å‘ã€é‡åŠ›å’Œç©å®¶
     public void SetupSword(Vector2 _dir, float _gravity, Player _player , float _freezeTimeDuration)
     {
-        freezeTimeDuration = _freezeTimeDuration; // ÉèÖÃ¶³½áÊ±¼ä
+        freezeTimeDuration = _freezeTimeDuration; // è®¾ç½®å†»ç»“æ—¶é—´
         player = _player;
         rb.velocity = _dir;
         rb.gravityScale = _gravity;
         if (pierceCount <= 0)
             anim.SetBool("Rotation", true);
 
-        spinMoveDistance = Mathf.Clamp(rb.velocity.x,-1,1);// ÏŞÖÆĞı×ªÒÆ¶¯¾àÀëÔÚ -1 µ½ 1 Ö®¼ä
+        spinMoveDistance = Mathf.Clamp(rb.velocity.x,-1,1);// é™åˆ¶æ—‹è½¬ç§»åŠ¨è·ç¦»åœ¨ -1 åˆ° 1 ä¹‹é—´
 
-        Invoke("DestroyMe", 7f); // 7ÃëºóÏú»Ù½£¶ÔÏó
+        Invoke("DestroyMe", 7f); // 7ç§’åé”€æ¯å‰‘å¯¹è±¡
     }
 
     public void SetupBounce(bool _isBouncing, int _bounceCount)
@@ -93,7 +93,7 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     public void ReturnSword()
     {
-        //¶³½á½£µÄĞı×ªºÍÒÆ¶¯
+        //å†»ç»“å‰‘çš„æ—‹è½¬å’Œç§»åŠ¨
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         //rb.isKinematic = false;
         transform.parent = null;
@@ -105,24 +105,24 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     public void Update()
     {
-        //Ê¹½£µÄ³¯ÏòÓëËÙ¶È·½ÏòÒ»ÖÂ
+        //ä½¿å‰‘çš„æœå‘ä¸é€Ÿåº¦æ–¹å‘ä¸€è‡´
         if (canRotate)
         {
             transform.right = rb.velocity;
         }
-        // Èç¹ûÕıÔÚ·µ»Ø½££¬´¦Àí·µ»ØÂß¼­
+        // å¦‚æœæ­£åœ¨è¿”å›å‰‘ï¼Œå¤„ç†è¿”å›é€»è¾‘
         if (isReturning)
         {
             transform.position = Vector2.MoveTowards(transform.position, player.transform.position, returnSpeed * Time.deltaTime);
-            //Èç¹û½£½Ó½üÍæ¼Ò£¬Ïú»Ù½£¶ÔÏó
+            //å¦‚æœå‰‘æ¥è¿‘ç©å®¶ï¼Œé”€æ¯å‰‘å¯¹è±¡
             if (Vector2.Distance(transform.position, player.transform.position) < 1)
             {
                 player.CatchSword();
             }
         }
-        // Èç¹ûÕıÔÚ·´µ¯£¬´¦Àí·´µ¯Âß¼­
+        // å¦‚æœæ­£åœ¨åå¼¹ï¼Œå¤„ç†åå¼¹é€»è¾‘
         BounceLogic();
-        // Èç¹ûÕıÔÚĞı×ª£¬´¦ÀíĞı×ªÂß¼­
+        // å¦‚æœæ­£åœ¨æ—‹è½¬ï¼Œå¤„ç†æ—‹è½¬é€»è¾‘
         SpinLogic();
     }
 
@@ -140,29 +140,29 @@ public class Sword_Skill_Controller : MonoBehaviour
                 transform.position =   Vector2.MoveTowards(
                     transform.position,
                     new Vector3(spinMoveDistance + transform.position.x, transform.position.y),
-                    spinMoveSpeed * Time.deltaTime); // ÈÃ½£ÔÚË®Æ½·½ÏòÉÏÒÆ¶¯
+                    spinMoveSpeed * Time.deltaTime); // è®©å‰‘åœ¨æ°´å¹³æ–¹å‘ä¸Šç§»åŠ¨
 
-                spinTimer -= Time.deltaTime; // ¼õÉÙĞı×ª³ÖĞøÊ±¼ä
-                hitTimer -= Time.deltaTime; // ¼õÉÙÃüÖĞÀäÈ´Ê±¼ä
+                spinTimer -= Time.deltaTime; // å‡å°‘æ—‹è½¬æŒç»­æ—¶é—´
+                hitTimer -= Time.deltaTime; // å‡å°‘å‘½ä¸­å†·å´æ—¶é—´
                 if (spinTimer <= 0)
                 {
-                    isSpinning = false; // Í£Ö¹Ğı×ª
-                    wasStopped = false; // ÖØÖÃÍ£Ö¹×´Ì¬
-                    isReturning = true; // ¿ªÊ¼·µ»Ø½£
+                    isSpinning = false; // åœæ­¢æ—‹è½¬
+                    wasStopped = false; // é‡ç½®åœæ­¢çŠ¶æ€
+                    isReturning = true; // å¼€å§‹è¿”å›å‰‘
                 }
                 if (hitTimer <= 0)
                 {
-                    // Èç¹ûÃüÖĞÀäÈ´Ê±¼ä½áÊø£¬¼ì²éÊÇ·ñ»÷ÖĞµĞÈË
+                    // å¦‚æœå‘½ä¸­å†·å´æ—¶é—´ç»“æŸï¼Œæ£€æŸ¥æ˜¯å¦å‡»ä¸­æ•Œäºº
                     Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, hitRadius);
                     foreach (Collider2D enemy in enemies)
                     {
 
                         if (enemy.TryGetComponent(out Enemy enemy1))
                         {
-                            SwordSkillDamage(enemy1); // Èç¹ûÅö×²ÎïÌåÊÇµĞÈË£¬µ÷ÓÃÆäÉËº¦·½·¨
+                            SwordSkillDamage(enemy1); // å¦‚æœç¢°æ’ç‰©ä½“æ˜¯æ•Œäººï¼Œè°ƒç”¨å…¶ä¼¤å®³æ–¹æ³•
                         }                     
                     }
-                    hitTimer = hitCooldown; // ÖØÖÃÃüÖĞÀäÈ´Ê±¼ä
+                    hitTimer = hitCooldown; // é‡ç½®å‘½ä¸­å†·å´æ—¶é—´
                 }
 
             }
@@ -171,22 +171,22 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     private void TriggerSpinStop()
     {
-        wasStopped = true; // ±ê¼ÇÎªÒÑÍ£Ö¹
-        rb.constraints = RigidbodyConstraints2D.FreezeAll; // ¶³½á½£µÄĞı×ªºÍÒÆ¶¯
-        spinTimer = spinDuration; // ÖØÖÃĞı×ª¼ÆÊ±Æ÷
-        hitTimer = hitCooldown; // ÖØÖÃÃüÖĞ¼ÆÊ±Æ÷
+        wasStopped = true; // æ ‡è®°ä¸ºå·²åœæ­¢
+        rb.constraints = RigidbodyConstraints2D.FreezeAll; // å†»ç»“å‰‘çš„æ—‹è½¬å’Œç§»åŠ¨
+        spinTimer = spinDuration; // é‡ç½®æ—‹è½¬è®¡æ—¶å™¨
+        hitTimer = hitCooldown; // é‡ç½®å‘½ä¸­è®¡æ—¶å™¨
     }
 
     private void BounceLogic()
     {
         if (isBouncing && enemyTargets.Count > 0)
         {
-            // ÈÃ½£³¯Ïòµ±Ç°Ä¿±ê
+            // è®©å‰‘æœå‘å½“å‰ç›®æ ‡
             transform.position = Vector2.MoveTowards(
                 transform.position,
                 enemyTargets[currentTargetIndex].position,
                 bounceSpeed * Time.deltaTime);
-            // Èç¹û½£½Ó½üµ±Ç°Ä¿±ê£¬ÇĞ»»µ½ÏÂÒ»¸öÄ¿±ê
+            // å¦‚æœå‰‘æ¥è¿‘å½“å‰ç›®æ ‡ï¼Œåˆ‡æ¢åˆ°ä¸‹ä¸€ä¸ªç›®æ ‡
             if (Vector2.Distance(transform.position, enemyTargets[currentTargetIndex].position) < 0.1f)
             {
                 if(enemyTargets[currentTargetIndex].TryGetComponent(out Enemy enemy))
@@ -195,17 +195,17 @@ public class Sword_Skill_Controller : MonoBehaviour
                 }
 
                 currentTargetIndex++;
-                bounceCount--; ; // ¼õÉÙ·´µ¯´ÎÊı
-                                 // Èç¹ûÒÑ¾­µ½´ï×îºóÒ»¸öÄ¿±ê£¬ÖØÖÃË÷Òı²¢Í£Ö¹·´µ¯
+                bounceCount--; ; // å‡å°‘åå¼¹æ¬¡æ•°
+                                 // å¦‚æœå·²ç»åˆ°è¾¾æœ€åä¸€ä¸ªç›®æ ‡ï¼Œé‡ç½®ç´¢å¼•å¹¶åœæ­¢åå¼¹
                 if (currentTargetIndex >= enemyTargets.Count)
                     currentTargetIndex = 0;
-                // Èç¹û·´µ¯´ÎÊıÓÃÍê£¬Í£Ö¹·´µ¯
+                // å¦‚æœåå¼¹æ¬¡æ•°ç”¨å®Œï¼Œåœæ­¢åå¼¹
                 if (bounceCount <= 0)
                 {
                     isBouncing = false;
                     enemyTargets.Clear();
-                    currentTargetIndex = 0; // ÖØÖÃË÷Òı
-                    isReturning = true; // ¿ªÊ¼·µ»Ø½£
+                    currentTargetIndex = 0; // é‡ç½®ç´¢å¼•
+                    isReturning = true; // å¼€å§‹è¿”å›å‰‘
                 }
 
             }
@@ -215,7 +215,7 @@ public class Sword_Skill_Controller : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isReturning)
-            return; // Èç¹ûÕıÔÚ·µ»Ø½££¬Ôò²»´¦ÀíÅö×²
+            return; // å¦‚æœæ­£åœ¨è¿”å›å‰‘ï¼Œåˆ™ä¸å¤„ç†ç¢°æ’
 
         if (collision.TryGetComponent(out Enemy enemy))
         {
@@ -223,18 +223,18 @@ public class Sword_Skill_Controller : MonoBehaviour
         }
 
 
-        // Èç¹ûÅö×²ÎïÌåÊÇµĞÈË£¬ÇÒ½£¿ÉÒÔĞı×ª£¬Ôò´¥·¢·´µ¯Âß¼­
+        // å¦‚æœç¢°æ’ç‰©ä½“æ˜¯æ•Œäººï¼Œä¸”å‰‘å¯ä»¥æ—‹è½¬ï¼Œåˆ™è§¦å‘åå¼¹é€»è¾‘
         SetupBounceTargets(collision);
 
-        // ´¥·¢Åö×²ºó£¬Í£Ö¹½£µÄĞı×ªºÍÒÆ¶¯£¬²¢½«Æä¸½×Åµ½Åö×²ÎïÌåÉÏ
+        // è§¦å‘ç¢°æ’åï¼Œåœæ­¢å‰‘çš„æ—‹è½¬å’Œç§»åŠ¨ï¼Œå¹¶å°†å…¶é™„ç€åˆ°ç¢°æ’ç‰©ä½“ä¸Š
         StuckInto(collision);
     }
 
     private void SwordSkillDamage(Enemy enemy)
     {
         int SwordFacingDirection = ( transform.position.x > enemy.transform.position.x ) ? -1 : 1;
-        enemy.Damage(Vector2.zero, SwordFacingDirection); // Èç¹ûÅö×²ÎïÌåÊÇµĞÈË£¬µ÷ÓÃÆäÉËº¦·½·¨
-        enemy.StartCoroutine("FreezeTimerFor", freezeTimeDuration); // ¶³½áµĞÈË
+        enemy.DamageEffect(Vector2.zero, SwordFacingDirection); // å¦‚æœç¢°æ’ç‰©ä½“æ˜¯æ•Œäººï¼Œè°ƒç”¨å…¶ä¼¤å®³æ–¹æ³•
+        enemy.StartCoroutine("FreezeTimerFor", freezeTimeDuration); // å†»ç»“æ•Œäºº
     }
 
     private void SetupBounceTargets(Collider2D collision)
@@ -244,7 +244,7 @@ public class Sword_Skill_Controller : MonoBehaviour
 
             if (isBouncing && enemyTargets.Count == 0)
             {
-                // »ñÈ¡ËùÓĞÔÚ·´µ¯°ë¾¶ÄÚµÄµĞÈË
+                // è·å–æ‰€æœ‰åœ¨åå¼¹åŠå¾„å†…çš„æ•Œäºº
                 LayerMask enemyLayerMask = LayerMask.GetMask("Enemy");
                 Collider2D[] enemyList = Physics2D.OverlapCircleAll(
                     transform.position, bounceRadius, enemyLayerMask);
@@ -253,11 +253,11 @@ public class Sword_Skill_Controller : MonoBehaviour
                 {
                     enemyTargets.Add(enemy.transform);
                 }
-                // Ò²¿ÉÒÔÊ¹ÓÃ LINQ À´¼ò»¯Ìí¼ÓÂß¼­
-                //enemyTargets.AddRange(      // ½«¼¯ºÏÅúÁ¿Ìí¼Óµ½ enemyTargets
-                //    enemyList.Select(       // ¶Ô enemyList ½øĞĞ×ª»»
-                //        e => e?.transform   // ¶ÔÃ¿¸öÔªËØ e °²È«·ÃÎÊ transform
-                //        )!                  // ¿Õ forgiving ÔËËã·û£¨¸æËß±àÒëÆ÷²»Îª null£©
+                // ä¹Ÿå¯ä»¥ä½¿ç”¨ LINQ æ¥ç®€åŒ–æ·»åŠ é€»è¾‘
+                //enemyTargets.AddRange(      // å°†é›†åˆæ‰¹é‡æ·»åŠ åˆ° enemyTargets
+                //    enemyList.Select(       // å¯¹ enemyList è¿›è¡Œè½¬æ¢
+                //        e => e?.transform   // å¯¹æ¯ä¸ªå…ƒç´  e å®‰å…¨è®¿é—® transform
+                //        )!                  // ç©º forgiving è¿ç®—ç¬¦ï¼ˆå‘Šè¯‰ç¼–è¯‘å™¨ä¸ä¸º nullï¼‰
                 //    );
             }
         }
@@ -265,30 +265,30 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     private void StuckInto(Collider2D collision)
     {
-        // ´©´Ì´ÎÊı´óÓÚ0ÇÒÅö×²ÎïÌåÊÇµĞÈË£¬Ôò¼õÉÙ´©´Ì´ÎÊı
+        // ç©¿åˆºæ¬¡æ•°å¤§äº0ä¸”ç¢°æ’ç‰©ä½“æ˜¯æ•Œäººï¼Œåˆ™å‡å°‘ç©¿åˆºæ¬¡æ•°
         if (pierceCount > 0 && collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             pierceCount--;
             return;
         }
 
-        canRotate = false;// ½ûÖ¹½£µÄÇ°½ø
-        cr.enabled = false;// ½ûÓÃÅö×²Æ÷£¬·ÀÖ¹ºóĞøÅö×²
-        rb.isKinematic = true;// ÉèÖÃ¸ÕÌåÎªÔË¶¯Ñ§Ä£Ê½£¬Í£Ö¹ÎïÀíÄ£Äâ
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;// ¶³½á½£µÄĞı×ªºÍÒÆ¶¯
+        canRotate = false;// ç¦æ­¢å‰‘çš„å‰è¿›
+        cr.enabled = false;// ç¦ç”¨ç¢°æ’å™¨ï¼Œé˜²æ­¢åç»­ç¢°æ’
+        rb.isKinematic = true;// è®¾ç½®åˆšä½“ä¸ºè¿åŠ¨å­¦æ¨¡å¼ï¼Œåœæ­¢ç‰©ç†æ¨¡æ‹Ÿ
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;// å†»ç»“å‰‘çš„æ—‹è½¬å’Œç§»åŠ¨
 
-        //Èç¹ûÊÇ·´µ¯×´Ì¬£¬ÇÒµĞÈËÄ¿±êÁĞ±í²»Îª¿Õ£¬Ôò²»¸½×Åµ½Åö×²ÎïÌåÉÏ
+        //å¦‚æœæ˜¯åå¼¹çŠ¶æ€ï¼Œä¸”æ•Œäººç›®æ ‡åˆ—è¡¨ä¸ä¸ºç©ºï¼Œåˆ™ä¸é™„ç€åˆ°ç¢°æ’ç‰©ä½“ä¸Š
         if (isBouncing && enemyTargets.Count > 0)
             return;
 
-        //Èç¹ûÊÇĞı×ª×´Ì¬£¬ÇÒ½£ÕıÔÚĞı×ª£¬Ôò²»¸½×Åµ½Åö×²ÎïÌåÉÏ
+        //å¦‚æœæ˜¯æ—‹è½¬çŠ¶æ€ï¼Œä¸”å‰‘æ­£åœ¨æ—‹è½¬ï¼Œåˆ™ä¸é™„ç€åˆ°ç¢°æ’ç‰©ä½“ä¸Š
         if (isSpinning)
         {
             TriggerSpinStop();
             return;
         }
 
-        //Í£Ö¹½£µÄĞı×ª,½«Æä¸½×Åµ½Åö×²ÎïÌåÉÏ
+        //åœæ­¢å‰‘çš„æ—‹è½¬,å°†å…¶é™„ç€åˆ°ç¢°æ’ç‰©ä½“ä¸Š
         anim.SetBool("Rotation", false);
         transform.parent = collision.transform;
     }

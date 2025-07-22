@@ -18,7 +18,7 @@ public class Player : Entity
     public int comboCounts = 0;
     [SerializeField] public Vector2[] attackMovement;
 
-    //ÈËÎïÃ¦Âµ×´Ì¬
+    //äººç‰©å¿™ç¢ŒçŠ¶æ€
     private bool _isBusy;
     public bool isBusy
     {
@@ -28,10 +28,10 @@ public class Player : Entity
             _isBusy = value;
         }
     }
-    private bool isVibrating = false; // Õğ¶¯×´Ì¬±êÖ¾
+    private bool isVibrating = false; // éœ‡åŠ¨çŠ¶æ€æ ‡å¿—
 
     public float counterAttackDuration;
-    public SkillManager skill { get;private set; }
+    public SkillManager skill { get; private set; }
 
     public GameObject sword { get; private set; }
     public float swordReturnImpact = 10f; // Placeholder for future sword return impact
@@ -52,6 +52,7 @@ public class Player : Entity
     public PlayerAimSwordState aimSwordState { get; private set; } // Placeholder for future aim sword state
     public PlayerCatchSwordState catchSwordState { get; private set; } // Placeholder for future catch sword state
     public PlayerBlackholeState blackholeState { get; private set; } // Placeholder for future blackhole state
+    public PlayerDeadState deadState { get; private set; } // Placeholder for future dead state
     #endregion
 
     protected override void Awake()
@@ -70,6 +71,7 @@ public class Player : Entity
         aimSwordState = new PlayerAimSwordState(stateMachine, this, "AimSword"); // Placeholder for future aim sword state
         catchSwordState = new PlayerCatchSwordState(stateMachine, this, "CatchSword"); // Placeholder for future catch sword state
         blackholeState = new PlayerBlackholeState(stateMachine, this, "Jump"); // Placeholder for future blackhole state
+        deadState = new PlayerDeadState(stateMachine, this, "Die"); // Placeholder for future dead state
     }
 
     protected override void Start()
@@ -96,7 +98,7 @@ public class Player : Entity
     }
 
     public void CatchSword()
-    {        
+    {
         stateMachine.ChangeState(catchSwordState);
         Destroy(sword);
     }
@@ -114,10 +116,10 @@ public class Player : Entity
 
     public void CheckForDashInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift)  && !isBusy)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isBusy)
         {
-            if(!skill.dash.CanUseSkill(true))
-                return; // Èç¹û¼¼ÄÜ²»¿ÉÓÃ£¬Ö±½Ó·µ»Ø
+            if (!skill.dash.CanUseSkill(true))
+                return; // å¦‚æœæŠ€èƒ½ä¸å¯ç”¨ï¼Œç›´æ¥è¿”å›
             dashDir = Input.GetAxisRaw("Horizontal");
             if (dashDir == 0) // If no horizontal input, default to facing direction
             {
@@ -127,19 +129,19 @@ public class Player : Entity
         }
     }
 
-    //ÈËÎïÕğ¶¯Ğ­³Ì
-    public  IEnumerator Vibrate(float duration)
+    //äººç‰©éœ‡åŠ¨åç¨‹
+    public IEnumerator Vibrate(float duration)
     {
         if (isVibrating) yield break;
         isVibrating = true;
         stateMachine.ChangeState(idleState);
         StartCoroutine(BusyFor(duration));
-        Vector3 originalPosition = transform.position; // ÖµÀàĞÍ¸´ÖÆ£¬ºóĞø²»ÔÙ¸üĞÂ
+        Vector3 originalPosition = transform.position; // å€¼ç±»å‹å¤åˆ¶ï¼Œåç»­ä¸å†æ›´æ–°
 
         float elapsedTime = 0f;
         while (elapsedTime < duration)
         {
-            // Ëæ»úÆ«ÒÆXÖá
+            // éšæœºåç§»Xè½´
             transform.position = new Vector3(
                 originalPosition.x + Random.Range(-0.05f, 0.05f),
                 transform.position.y,
@@ -150,8 +152,14 @@ public class Player : Entity
             yield return null;
         }
 
-        transform.position = new Vector3(originalPosition.x, transform.position.y, transform.position.z); // ¾«È·»¹Ô­
-        yield return new WaitForSeconds(0.5f); // ¶ÌÔİÍ£¶Ù
-        isVibrating = false; // ÖØÖÃÕğ¶¯×´Ì¬
+        transform.position = new Vector3(originalPosition.x, transform.position.y, transform.position.z); // ç²¾ç¡®è¿˜åŸ
+        yield return new WaitForSeconds(0.5f); // çŸ­æš‚åœé¡¿
+        isVibrating = false; // é‡ç½®éœ‡åŠ¨çŠ¶æ€
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        stateMachine.ChangeState(deadState);
     }
 }

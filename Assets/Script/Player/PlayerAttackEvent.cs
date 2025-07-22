@@ -18,7 +18,8 @@ public class PlayerAttackEvent : MonoBehaviour
         {
             if (hit.TryGetComponent(out Enemy enemy))
             {
-                enemy.Damage(Vector2.zero, player.facingDirection);
+                //enemy.DamageEffect(Vector2.zero, player.facingDirection);
+                player.stats.DoDamage(enemy.stats);
             }
                 
         }

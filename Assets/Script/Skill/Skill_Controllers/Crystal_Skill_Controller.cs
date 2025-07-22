@@ -139,7 +139,7 @@ public class Crystal_Skill_Controller : MonoBehaviour
             {
                 Vector2 knockbackVector = new Vector2(5, 0);
                 int damageFacingDirection = (currentCrystal.transform.position.x > enemy.transform.position.x) ? -1 : 1;
-                enemy.Damage(knockbackVector, damageFacingDirection);
+                enemy.DamageEffect(knockbackVector, damageFacingDirection);
             }
         }
     }

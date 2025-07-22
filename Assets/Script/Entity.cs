@@ -6,12 +6,14 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     #region Components
-    public Animator anim { get; private set; }
-    public Rigidbody2D rb { get; private set; }
-    public EntityFX fx { get; private set; } // Placeholder for future FX
+    public Animator anim { get; private set; } // 动画控制器，用于处理实体的动画状态
+    public Rigidbody2D rb { get; private set; } // 刚体2D组件，用于处理物理运动和碰撞
+    public EntityFX fx { get; private set; } // 实体特效脚本，用于处理闪烁、受伤等视觉效果
 
-    public SpriteRenderer sr { get; private set; } // Placeholder for future sprite effects
+    public SpriteRenderer sr { get; private set; } // 精灵渲染器，用于显示实体的外观
 
+    public CharacterStats stats { get; private set; } // 人物属性脚本，包含生命值、伤害等信息
+    public CapsuleCollider2D cr { get; private set; }
     #endregion
 
     [Header("Collision info")]
@@ -45,6 +47,8 @@ public class Entity : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         fx = GetComponent<EntityFX>();
         sr = GetComponentInChildren<SpriteRenderer>();
+        stats = GetComponent<CharacterStats>();
+        cr = GetComponentInChildren<CapsuleCollider2D>();
     }
 
     // Update is called once per frame
@@ -53,7 +57,7 @@ public class Entity : MonoBehaviour
 
     }
 
-    public virtual void Damage(Vector2 _knockbackVector,int facingDirection)
+    public virtual void DamageEffect(Vector2 _knockbackVector,int facingDirection)
     {
         if(_knockbackVector == Vector2.zero)
             _knockbackVector = knockbackVector;
@@ -121,5 +125,10 @@ public class Entity : MonoBehaviour
         {
             sr.color = Color.white;
         }
+    }
+
+    public virtual void Die()
+    {
+
     }
 }

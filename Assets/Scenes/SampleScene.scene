@@ -318,6 +318,7 @@ GameObject:
   - component: {fileID: 197488332}
   - component: {fileID: 197488331}
   - component: {fileID: 197488333}
+  - component: {fileID: 197488334}
   m_Layer: 6
   m_HasEditorInfo: 1
   m_Name: Player
@@ -460,6 +461,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitMat: {fileID: 2100000, guid: 880b27b29b0150d4697c760fb942777f, type: 2}
   flashDuration: 0.2
+--- !u!114 &197488334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197488328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa42208da8829f44bc689ba2426c126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage:
+    baseValue: 5
+    modifiers: 
+  maxHealth:
+    baseValue: 100
+    modifiers: 
+  strength:
+    baseValue: 0
+    modifiers: 
+  entity: {fileID: 0}
+  currentHealth: 0
 --- !u!1 &213880683
 GameObject:
   m_ObjectHideFlags: 0
@@ -6257,7 +6281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 1
   clonePrefab: {fileID: 6079215219790860518, guid: abca280084671764ba32a0a6d9522a53, type: 3}
-  colorDuration: 1
+  cloneDuration: 0
   canAttack: 1
 --- !u!114 &1665581460
 MonoBehaviour:
@@ -6322,12 +6346,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 3
+  crystalTag: 1
   crystalPrefab: {fileID: 8704292208309311049, guid: 34e5de5d3b459f44ab394b6ea9b0b829, type: 3}
   crystalDuration: 3
   maxDistance: 10
   canGrow: 1
   growSpeed: 3
   maxSize: 3
+  moveSpeed: 10
+  moveDistance: 10
+  moveDirection: {x: 0, y: 0}
+  maxMoveCrystals: 3
+  moveCrystalList: []
+  currentMoveCrystal: {fileID: 0}
+  moveSkillCooldown: 5
 --- !u!1 &1917948079
 GameObject:
   m_ObjectHideFlags: 0
