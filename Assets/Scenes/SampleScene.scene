@@ -473,16 +473,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa42208da8829f44bc689ba2426c126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entity: {fileID: 0}
+  strength:
+    baseValue: 20
+    modifiers: 
+  agility:
+    baseValue: 20
+    modifiers: 
+  intelligence:
+    baseValue: 0
+    modifiers: 
+  Vitality:
+    baseValue: 0
+    modifiers: 
   damage:
     baseValue: 5
     modifiers: 
   maxHealth:
     baseValue: 100
     modifiers: 
-  strength:
-    baseValue: 0
+  armor:
+    baseValue: 5
     modifiers: 
-  entity: {fileID: 0}
+  evasion:
+    baseValue: 20
+    modifiers: 
   currentHealth: 0
 --- !u!1 &213880683
 GameObject:
@@ -6744,6 +6759,10 @@ PrefabInstance:
     - target: {fileID: 8373260269829299611, guid: 01070b5500e121646a745c338b7c37fa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8631030667187034730, guid: 01070b5500e121646a745c338b7c37fa, type: 3}
+      propertyPath: strength.baseValue
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

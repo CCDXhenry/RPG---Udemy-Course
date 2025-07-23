@@ -13,7 +13,7 @@ public class CharacterStats : MonoBehaviour
     [Tooltip("智力,影响魔法攻击力和法力值")]
     public Stat intelligence;
     [Tooltip("耐力,影响最大生命值和物理防御力")]
-    public Stat Vitality;
+    public Stat vitality;
 
     [Header("Defensive stats")]
     [Tooltip("攻击力,影响物理伤害输出")]
@@ -25,12 +25,18 @@ public class CharacterStats : MonoBehaviour
     [Tooltip("闪避概率")]
     public Stat evasion;
 
-    [SerializeField] private int currentHealth;
+    public int currentHealth;
+    public System.Action onHealthChanged;
 
     protected virtual void Start()
     {
         entity = GetComponent<Entity>();
-        currentHealth = maxHealth.GetValue();
+        currentHealth = GetMaxHealthValue();
+    }
+
+    public int GetMaxHealthValue()
+    {
+        return maxHealth.GetValue() + vitality.GetValue() * 5;
     }
 
     /// <summary>
@@ -85,15 +91,16 @@ public class CharacterStats : MonoBehaviour
     public virtual void TakeDamage(int _damage)
     {
         currentHealth -= _damage;
+        onHealthChanged?.Invoke();// 通知UI更新生命值显示
         if (currentHealth <= 0)
         {
             Die();
         }
-        Debug.Log($"{gameObject.name} took {_damage} damage. Current health: {currentHealth}");
+
     }
     protected virtual void Die()
     {
-        
+
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
     }

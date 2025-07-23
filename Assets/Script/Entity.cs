@@ -15,6 +15,9 @@ public class Entity : MonoBehaviour
     public CharacterStats stats { get; private set; } // 人物属性脚本，包含生命值、伤害等信息
     public CapsuleCollider2D cr { get; private set; }
     #endregion
+    #region Event
+    public System.Action onFlipped;
+    #endregion
 
     [Header("Collision info")]
     public Transform attackCheck;
@@ -101,6 +104,8 @@ public class Entity : MonoBehaviour
         facingRight = !facingRight;
         facingDirection *= -1;
         transform.Rotate(0, 180, 0);
+        onFlipped?.Invoke();// 如果有订阅者，调用它们
+
     }
 
     public void FlipController(float x)
