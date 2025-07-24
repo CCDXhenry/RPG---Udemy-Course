@@ -4,7 +4,7 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Health_Bar_UI : MonoBehaviour
+public class UI_HealthBar : MonoBehaviour
 {
     private Entity entity;
     private RectTransform rectTransform;
@@ -31,7 +31,6 @@ public class Health_Bar_UI : MonoBehaviour
 
     private void FlipUI()
     {
-        Debug.Log("Flipping UI for " + entity.gameObject.name);
         rectTransform.Rotate(0, 180, 0);
     }
 

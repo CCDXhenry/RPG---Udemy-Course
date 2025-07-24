@@ -15,7 +15,7 @@ public class Crystal_Skill_Controller : MonoBehaviour
     private float maxSize;
 
 
-
+    private bool isExploded = false;
     private bool _isExploding = false;
     public bool isExploding
     {
@@ -123,7 +123,12 @@ public class Crystal_Skill_Controller : MonoBehaviour
 
     private void ProcessCrystalExplosion()
     {
-        anim.SetTrigger("Explode");
+        if (!isExploded)
+        {//确保爆炸动画只触发一次
+            anim.SetTrigger("Explode");
+            isExploded = true;
+        }
+        
         if (canGrow)
         {
             currentCrystal.transform.localScale = Vector2.Lerp(currentCrystal.transform.localScale, Vector2.one * maxSize, growSpeed * Time.deltaTime);
