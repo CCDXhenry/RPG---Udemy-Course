@@ -13,6 +13,7 @@ public class PlayerState
     public bool triggerCalled;
     protected Rigidbody2D rb;
     protected bool skillIsUsed = false;
+    protected CapsuleCollider2D cr;
     public PlayerState(PlayerStateMachine stateMachine, Player player, string animBoolName)
     {
         this.stateMachine = stateMachine;
@@ -24,6 +25,7 @@ public class PlayerState
     {
         player.anim.SetBool(animBoolName, true);
         rb = player.rb;
+        cr = player.cr;
         triggerCalled = false;
     }
 

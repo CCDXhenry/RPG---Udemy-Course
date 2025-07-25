@@ -15,5 +15,57 @@ public enum EquipmentgType
 public class ItemData_Equipment : ItemData
 {
     public EquipmentgType equipmentType;
+
+    [Header("Major stats")]
+    [Tooltip("力量,影响物理攻击力")]
+    public int strength;
+    [Tooltip("敏捷,影响攻击速度和闪避率")]
+    public int agility;
+    [Tooltip("智力,影响魔法攻击力和法力值")]
+    public int intelligence;
+    [Tooltip("耐力,影响最大生命值和物理防御力")]
+    public int vitality;
+
+    [Header("Defensive stats")]
+    [Tooltip("攻击力,影响物理伤害输出")]
+    public int damage;
+    [Tooltip("最大生命值,影响角色的生存能力")]
+    public int maxHealth;
+    [Tooltip("护甲值,减少受到的物理伤害")]
+    public int armor;
+    [Tooltip("闪避概率")]
+    public int evasion;
+
+    [Header("Craft requirements")]
+    public List<InventoryItem> craftingMaterials;
+
+    public void AddModifiers()
+    {
+        PlayerStats playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
+
+        playerStats.strength.AddModifier(strength);
+        playerStats.agility.AddModifier(agility);
+        playerStats.intelligence.AddModifier(intelligence);
+        playerStats.vitality.AddModifier(vitality);
+
+        playerStats.armor.AddModifier(armor);
+        playerStats.damage.AddModifier(damage);
+        playerStats.maxHealth.AddModifier(maxHealth);
+        playerStats.evasion.AddModifier(evasion);
+
+    }
+
+    public void RemoveModifiers()
+    {
+        PlayerStats playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
+        playerStats.strength.RemoveModifier(strength);
+        playerStats.agility.RemoveModifier(agility);
+        playerStats.intelligence.RemoveModifier(intelligence);
+        playerStats.vitality.RemoveModifier(vitality);
+        playerStats.armor.RemoveModifier(armor);
+        playerStats.damage.RemoveModifier(damage);
+        playerStats.maxHealth.RemoveModifier(maxHealth);
+        playerStats.evasion.RemoveModifier(evasion);
+    }
 }
 

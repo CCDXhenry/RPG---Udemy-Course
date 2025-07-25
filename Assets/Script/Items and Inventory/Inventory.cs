@@ -1,4 +1,3 @@
-using Assets.Script.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,14 +7,15 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance; // Singleton instance
-
-
+    //初始库存
+    public ItemData[] initialItems; // 初始物品数据数组
+    // 背包
     public List<InventoryItem> inventoryItems;
     public Dictionary<ItemData, InventoryItem> inventoryDictionary;
-
+    // 仓库
     public List<InventoryItem> stashItems;
     public Dictionary<ItemData, InventoryItem> stashDictionary;
-
+    // 装备
     public List<InventoryItem> equipmentItems;
     public Dictionary<ItemData_Equipment, InventoryItem> equipmentDictionary;
 
@@ -51,6 +51,16 @@ public class Inventory : MonoBehaviour
         inventoryItemSlot = inventorySlotParent.GetComponentsInChildren<UI_ItemSlot>();
         stashItemSlot = stashSlotParent.GetComponentsInChildren<UI_ItemSlot>();
         equipmentItemSlot = equipmentSlotParent.GetComponentsInChildren<UI_ItemSlot_Equipment>();
+        // 初始化背包和仓库
+        AddinitialItems();
+    }
+
+    private void AddinitialItems()
+    {
+        foreach (ItemData itemData in initialItems)
+        {
+            AddItem(itemData);
+        }
     }
 
     /// <summary>
@@ -70,23 +80,35 @@ public class Inventory : MonoBehaviour
             if (item.Key.equipmentType == newEquipment.equipmentType)
             {
                 oldEquipment = item.Key;
-                UnequipItem(item);
-                AddItem(oldEquipment);
+                UnequipItem(item, false);
                 break;
             }
         }
 
         equipmentItems.Add(newItem);
         equipmentDictionary[newEquipment] = newItem;
+        newEquipment.AddModifiers(); // 增加装备属性
         RemoveItem(_item);
 
         //UpdateSlotUI();
     }
 
-    private void UnequipItem(KeyValuePair<ItemData_Equipment, InventoryItem> item)
+    /// <summary>
+    /// 卸下装备
+    /// </summary>
+    /// <param name="item"></param>
+    public void UnequipItem(KeyValuePair<ItemData_Equipment, InventoryItem> item, bool isDrop)
     {
         equipmentItems.Remove(item.Value);
         equipmentDictionary.Remove(item.Key);
+        item.Key.RemoveModifiers(); // 移除装备属性
+        if (isDrop)
+        {
+            UpdateSlotUI();
+            return;
+        }
+           
+        AddItem(item.Key);// 将装备放回背包或仓库
     }
 
     private void UpdateSlotUI()
@@ -117,28 +139,30 @@ public class Inventory : MonoBehaviour
             }
         }
 
+        // 循环装备槽，更新UI
         for (int i = 0; i < equipmentItemSlot.Length; i++)
         {
+            equipmentItemSlot[i].ClearItemSlotUI();
             foreach (KeyValuePair<ItemData_Equipment, InventoryItem> item in equipmentDictionary)
             {
                 if (item.Key.equipmentType == equipmentItemSlot[i].equipmentType)
                 {
-                    
+
                     equipmentItemSlot[i].UpdateItemSlotUI(item.Value);
                     break;
                 }
             }
         }
-        
+
     }
 
     public void AddItem(ItemData _itemData)
     {
-        if (_itemData.itemType == ItemType.Material)
+        if (_itemData.itemType == ItemType.Equipment)
         {
             AddToInventory(_itemData);
         }
-        else if (_itemData.itemType == ItemType.Equipment)
+        else if (_itemData.itemType == ItemType.Material)
         {
             AddToStash(_itemData);
         }
@@ -202,5 +226,46 @@ public class Inventory : MonoBehaviour
         UpdateSlotUI();
     }
 
+    /// <summary>
+    /// 检查是否可以制作物品
+    /// </summary>
+    /// <param name="_itemToCraft"></param>
+    /// <param name="_requiredMaterials"></param>
+    /// <returns></returns>
+    public bool CanCraft(ItemData_Equipment _itemToCraft, List<InventoryItem> _requiredMaterials)
+    {
+        List<InventoryItem> materialsToRemove = new List<InventoryItem>();
+        // 从仓库中检查所需材料
+        foreach (InventoryItem material in _requiredMaterials)
+        {
+            if (stashDictionary.TryGetValue(material.data, out InventoryItem stashItem))
+            {
+                if (stashItem.stackSize >= material.stackSize)
+                {
+                    materialsToRemove.Add(stashItem);
+                }
+                else
+                {
+                    return false; // Not enough materials
+                }
+            }
+            else
+            {
+                return false; // Material not found in stash
+            }
+        }
+        // If we reach here, we have enough materials
+        foreach (InventoryItem material in materialsToRemove)
+        {
+            RemoveItem(material.data);
+        }
 
+        AddItem(_itemToCraft);
+        Debug.Log("Crafted item: " + _itemToCraft.name);
+        return true; // Crafting successful
+    }
+
+    public List<InventoryItem> GetEqipmentItems() => equipmentItems;
+    public List<InventoryItem> GetInventoryItems() => inventoryItems;
+    public List<InventoryItem> GetStashItems() => stashItems;
 }

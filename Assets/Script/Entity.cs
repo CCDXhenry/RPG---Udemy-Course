@@ -65,7 +65,7 @@ public class Entity : MonoBehaviour
         if(_knockbackVector == Vector2.zero)
             _knockbackVector = knockbackVector;
 
-        Debug.Log(gameObject.name + " was damage " + _knockbackVector);
+        //Debug.Log(gameObject.name + " was damage " + _knockbackVector);
         fx.StartCoroutine("FlashFX");
         StartCoroutine(HitKnockback(_knockbackVector, facingDirection));
     }

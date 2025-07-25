@@ -27,6 +27,7 @@ public class CharacterStats : MonoBehaviour
 
     public int currentHealth;
     public System.Action onHealthChanged;
+    public bool isDead { get; private set; }
 
     protected virtual void Start()
     {
@@ -90,6 +91,7 @@ public class CharacterStats : MonoBehaviour
     /// <param name="_damage">伤害值</param>
     public virtual void TakeDamage(int _damage)
     {
+        //Debug.Log($"{gameObject.name} took {_damage} damage. Current health: {currentHealth}");
         currentHealth -= _damage;
         onHealthChanged?.Invoke();// 通知UI更新生命值显示
         if (currentHealth <= 0)
@@ -100,8 +102,9 @@ public class CharacterStats : MonoBehaviour
     }
     protected virtual void Die()
     {
-
+        isDead = true;
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
+        
     }
 }

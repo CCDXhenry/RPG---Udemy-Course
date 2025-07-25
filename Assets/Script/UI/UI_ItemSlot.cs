@@ -39,7 +39,7 @@ public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler
         itemText.text = "";
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
@@ -47,6 +47,13 @@ public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler
             {
                 Inventory.instance.EquipItem(item.data);
                 
+            }
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (item != null)
+            {
+                Inventory.instance.RemoveItem(item.data);
             }
         }
     }
