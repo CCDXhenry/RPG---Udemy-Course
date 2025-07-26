@@ -19,7 +19,8 @@ public class PlayerAttackEvent : MonoBehaviour
             if (hit.TryGetComponent(out Enemy enemy))
             {
                 //enemy.DamageEffect(Vector2.zero, player.facingDirection);
-                player.stats.DoDamage(enemy.stats);
+                player.stats.DoDamage(enemy.stats, 0);
+                Inventory.instance.GetEqiupmentEffects(EquipmentType.Weapon)?.ExecuteItemEffect(enemy.transform);
             }
                 
         }

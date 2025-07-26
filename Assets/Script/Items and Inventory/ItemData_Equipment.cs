@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum EquipmentgType
+public enum EquipmentType
 {
     Weapon,
     Armor,
@@ -14,7 +14,9 @@ public enum EquipmentgType
 [CreateAssetMenu(fileName = "New Equipment Item", menuName = "Data/Equipment")]
 public class ItemData_Equipment : ItemData
 {
-    public EquipmentgType equipmentType;
+    public EquipmentType equipmentType;
+
+    public ItemEffect[] itemEffects; // 物品效果列表
 
     [Header("Major stats")]
     [Tooltip("力量,影响物理攻击力")]
@@ -66,6 +68,14 @@ public class ItemData_Equipment : ItemData
         playerStats.damage.RemoveModifier(damage);
         playerStats.maxHealth.RemoveModifier(maxHealth);
         playerStats.evasion.RemoveModifier(evasion);
+    }
+
+    public void ExecuteItemEffect(Transform enemyTransform)
+    {
+        foreach (ItemEffect effect in itemEffects)
+        {
+            effect.ExecuteEffect(enemyTransform);
+        }
     }
 }
 

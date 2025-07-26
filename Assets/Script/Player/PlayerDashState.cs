@@ -24,7 +24,6 @@ public class PlayerDashState : PlayerState
     public override void Update()
     {
         base.Update();
-        Debug.Log("I doing dash");
         if (player.IsWallDetected())
         {
             stateMachine.ChangeState(player.idleState);

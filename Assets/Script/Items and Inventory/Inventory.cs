@@ -107,7 +107,7 @@ public class Inventory : MonoBehaviour
             UpdateSlotUI();
             return;
         }
-           
+
         AddItem(item.Key);// 将装备放回背包或仓库
     }
 
@@ -268,4 +268,16 @@ public class Inventory : MonoBehaviour
     public List<InventoryItem> GetEqipmentItems() => equipmentItems;
     public List<InventoryItem> GetInventoryItems() => inventoryItems;
     public List<InventoryItem> GetStashItems() => stashItems;
+
+    public ItemData_Equipment GetEqiupmentEffects(EquipmentType _type)
+    {
+        foreach (KeyValuePair<ItemData_Equipment, InventoryItem> item in equipmentDictionary)
+        {
+            if (item.Key.equipmentType == _type)
+            {
+                return item.Key;
+            }
+        }
+        return null;
+    }
 }

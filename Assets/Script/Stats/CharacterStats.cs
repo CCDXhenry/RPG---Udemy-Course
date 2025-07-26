@@ -44,7 +44,9 @@ public class CharacterStats : MonoBehaviour
     /// 造成伤害并应用到目标角色的生命值上。
     /// </summary>
     /// <param name="_targetStats">目标角色</param>
-    public virtual void DoDamage(CharacterStats _targetStats)
+    /// <param name="_totalDamage">总伤害值,默认值为0,为基本伤害算法</param>
+    /// <param name="facingdir">攻击方向,默认值为0,表示用自身面朝的方向作为攻击方向</param>
+    public virtual void DoDamage(CharacterStats _targetStats, int _totalDamage = 0, int _facingdir = 0)
     {
         // 计算目标的闪避率，决定是否命中
         bool isHitSuccessful = CheckEvasion(_targetStats);
@@ -52,16 +54,22 @@ public class CharacterStats : MonoBehaviour
         {
             return;
         }
+
         // 计算总伤害
-        int totalDamage = GetTotalDamage(_targetStats);
+        int totalDamage = GetTotalDamage(_targetStats, _totalDamage);
 
         _targetStats.TakeDamage(totalDamage);
-        _targetStats.entity.DamageEffect(Vector2.zero, entity.facingDirection);
+
+        // 触发受伤效果
+        int facingdir = _facingdir != 0 ? _facingdir : entity.facingDirection;
+        _targetStats.entity.DamageEffect(Vector2.zero, facingdir);
     }
 
-    private int GetTotalDamage(CharacterStats _targetStats)
+
+
+    private int GetTotalDamage(CharacterStats _targetStats, int _totalDamage)
     {
-        int totalDamage = damage.GetValue() + strength.GetValue();
+        int totalDamage = _totalDamage != 0 ? _totalDamage : damage.GetValue() + strength.GetValue();
         // 计算目标的护甲值，减少伤害
         int armorValue = _targetStats.armor.GetValue();
         if (armorValue > 0)
@@ -105,6 +113,6 @@ public class CharacterStats : MonoBehaviour
         isDead = true;
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
-        
+
     }
 }
