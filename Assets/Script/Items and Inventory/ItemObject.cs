@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemObject : MonoBehaviour
 {
     [SerializeField] private ItemData itemData;
-    [SerializeField] private Rigidbody2D rb;
+    public Rigidbody2D rb;
 
 
     private void Awake()
@@ -29,5 +29,9 @@ public class ItemObject : MonoBehaviour
     {
         Inventory.instance.AddItem(itemData);
         Destroy(gameObject);
+    }
+    public ItemData GetItemData()
+    {
+        return itemData;
     }
 }

@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType
+{
+    Strength,
+    Agility,
+    Intelligence,
+    Vitality,
+    Damage,
+    MaxHealth,
+    Armor,
+    Evasion
+}
 public class CharacterStats : MonoBehaviour
 {
     public Entity entity;
@@ -114,5 +125,31 @@ public class CharacterStats : MonoBehaviour
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
 
+    }
+
+    public Stat GetStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Strength:
+                return strength;
+            case StatType.Agility:
+                return agility;
+            case StatType.Intelligence:
+                return intelligence;
+            case StatType.Vitality:
+                return vitality;
+            case StatType.Damage:
+                return damage;
+            case StatType.MaxHealth:
+                return maxHealth;
+            case StatType.Armor:
+                return armor;
+            case StatType.Evasion:
+                return evasion;
+            default:
+                Debug.LogError("Unknown stat type: " + statType);
+                return null;
+        }
     }
 }

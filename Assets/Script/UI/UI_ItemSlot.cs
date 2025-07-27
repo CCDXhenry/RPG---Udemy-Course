@@ -11,8 +11,9 @@ public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler
     [SerializeField] private Image itemImage;
     [SerializeField] private TextMeshProUGUI itemText;
 
+
     public InventoryItem item;
-    public void UpdateItemSlotUI(InventoryItem _newItem)
+    public virtual void UpdateItemSlotUI(InventoryItem _newItem)
     {
         item = _newItem;
         if (item != null)

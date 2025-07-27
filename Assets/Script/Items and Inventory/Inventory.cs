@@ -23,10 +23,12 @@ public class Inventory : MonoBehaviour
     [SerializeField] private Transform inventorySlotParent;
     [SerializeField] private Transform stashSlotParent;
     [SerializeField] private Transform equipmentSlotParent;
+    [SerializeField] private Transform statSlotParent; // 用于显示属性的UI容器
 
     private UI_ItemSlot[] inventoryItemSlot;
     private UI_ItemSlot[] stashItemSlot;
     private UI_ItemSlot_Equipment[] equipmentItemSlot;
+    private UI_StatSlot[] statSlots;
     private void Awake()
     {
         if (instance == null)
@@ -51,6 +53,7 @@ public class Inventory : MonoBehaviour
         inventoryItemSlot = inventorySlotParent.GetComponentsInChildren<UI_ItemSlot>();
         stashItemSlot = stashSlotParent.GetComponentsInChildren<UI_ItemSlot>();
         equipmentItemSlot = equipmentSlotParent.GetComponentsInChildren<UI_ItemSlot_Equipment>();
+        statSlots = statSlotParent.GetComponentsInChildren<UI_StatSlot>();
         // 初始化背包和仓库
         AddinitialItems();
     }
@@ -154,10 +157,17 @@ public class Inventory : MonoBehaviour
             }
         }
 
+        // 更新属性UI
+        for (int i = 0; i < statSlots.Length; i++)
+        {
+            statSlots[i].UpdateStatValueUI();
+        }
     }
 
     public void AddItem(ItemData _itemData)
     {
+        if (!CanAddItem(_itemData))
+            return;
         if (_itemData.itemType == ItemType.Equipment)
         {
             AddToInventory(_itemData);
@@ -279,5 +289,19 @@ public class Inventory : MonoBehaviour
             }
         }
         return null;
+    }
+    // 判断是否可以添加物品到背包或仓库
+    public bool CanAddItem(ItemData _itemData)
+    {
+        if (_itemData.itemType == ItemType.Equipment)
+        {
+            Debug.Log("inventoryItems.Count: " + inventoryItems.Count + ", inventoryItemSlot.Length: " + inventoryItemSlot.Length);
+            return inventoryItems.Count < inventoryItemSlot.Length;
+        }
+        else if (_itemData.itemType == ItemType.Material)
+        {
+            return stashItems.Count < stashItemSlot.Length;
+        }
+        return false; // 不支持的物品类型
     }
 }
