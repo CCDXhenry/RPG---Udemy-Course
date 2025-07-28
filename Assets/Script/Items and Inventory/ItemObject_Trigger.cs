@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -16,7 +17,12 @@ public class ItemObject_Trigger : MonoBehaviour
             if (collision.GetComponent<CharacterStats>().isDead)
                 return;
             if (!Inventory.instance.CanAddItem(myItemObject.GetItemData()))
-                myItemObject.rb.velocity = Vector2.up * 5f; // 如果背包已满，物品将被抛起
+            {
+                if (myItemObject.rb.velocity.y == 0)
+                    myItemObject.rb.velocity = Vector2.up * 3f; // 如果背包已满，物品将被抛起
+                return;
+            }
+
             myItemObject.PickupItem();
         }
     }

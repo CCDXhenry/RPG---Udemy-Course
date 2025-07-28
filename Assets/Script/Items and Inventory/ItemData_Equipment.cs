@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ public enum EquipmentType
     Amulet,
     Flask,
 }
+
 
 [CreateAssetMenu(fileName = "New Equipment Item", menuName = "Data/Equipment")]
 public class ItemData_Equipment : ItemData
@@ -75,6 +78,36 @@ public class ItemData_Equipment : ItemData
         foreach (ItemEffect effect in itemEffects)
         {
             effect.ExecuteEffect(enemyTransform);
+        }
+    }
+
+    public override string GetDescription()
+    {
+        description.Clear();
+        AddStatDescription(strength, "Strength");
+        AddStatDescription(agility, "Agility");
+        AddStatDescription(intelligence, "Intelligence");
+        AddStatDescription(vitality, "Vitality");
+        
+        AddStatDescription(damage, "Damage");
+        AddStatDescription(maxHealth, "Max Health");
+        AddStatDescription(armor, "Armor");
+        AddStatDescription(evasion, "Evasion");
+
+        description.AppendLine();
+        return description.ToString();
+    }
+
+    private void AddStatDescription(int _value, string _name)
+    {
+        if (_value != 0)
+        {
+            if (description.Length > 0)
+            {
+                description.AppendLine();
+            }
+            string sign = _value > 0 ? "+" : "";
+            description.Append(sign + _value + "  " + _name);
         }
     }
 }

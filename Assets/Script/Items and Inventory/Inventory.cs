@@ -295,7 +295,7 @@ public class Inventory : MonoBehaviour
     {
         if (_itemData.itemType == ItemType.Equipment)
         {
-            Debug.Log("inventoryItems.Count: " + inventoryItems.Count + ", inventoryItemSlot.Length: " + inventoryItemSlot.Length);
+            //Debug.Log("inventoryItems.Count: " + inventoryItems.Count + ", inventoryItemSlot.Length: " + inventoryItemSlot.Length);
             return inventoryItems.Count < inventoryItemSlot.Length;
         }
         else if (_itemData.itemType == ItemType.Material)
