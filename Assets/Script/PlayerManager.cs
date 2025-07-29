@@ -7,6 +7,8 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager instance;
     
     public Player player;
+
+    public int currency;
     private void Awake()
     {
         if (instance == null)
@@ -15,7 +17,20 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject); // 销毁当前多余的 GameObject
+            Destroy(gameObject); // 閿�姣佸綋鍓嶅浣欑殑 GameObject
+        }
+    }
+
+    public bool HaveEnoughCurrency(int amount)
+    {
+        if (currency >= amount)
+        {
+            currency -= amount;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

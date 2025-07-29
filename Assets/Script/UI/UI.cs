@@ -1,23 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
     public UI_ItemToolTip itemToolTip;
+    public UI_SkillToolTip skillToolTip;
+
 
     public GameObject characterUI;
     public GameObject skillTreeUI;
     public GameObject craftUI;
     public GameObject optionsUI;
+    public GameObject inGameUI;
+
     private bool isUIOpen = false;
+    private void Awake()
+    {
+        SwitchTo(skillTreeUI);//awake技能按钮监听事件
+    }
     private void Start()
     {
         
         isUIOpen = false;
-        SwitchTo(null);
+        SwitchTo(inGameUI);
 
         itemToolTip.gameObject.SetActive(false);
+        skillToolTip.gameObject.SetActive(false);
+        
     }
 
     private void Update()
@@ -26,8 +37,7 @@ public class UI : MonoBehaviour
         {
             if (isUIOpen)
             {
-                SwitchTo(null);
-                isUIOpen = false;
+                SwitchInGameUI();
             }
             else
             {
@@ -70,9 +80,15 @@ public class UI : MonoBehaviour
         if (_menu != null && _menu.activeSelf)
         {
             _menu.SetActive(false);
-            isUIOpen = false;
+            SwitchInGameUI();
             return;
         }
         SwitchTo(_menu);
+    }
+
+    private void SwitchInGameUI()
+    {
+        SwitchTo(inGameUI);
+        isUIOpen = false;
     }
 }

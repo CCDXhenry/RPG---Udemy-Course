@@ -58,7 +58,8 @@ public class Clone_Skill_Controller : MonoBehaviour
             if (hit.TryGetComponent(out Enemy enemy))
             {
                 int damageFacingDirection = (transform.position.x > enemy.transform.position.x) ? -1 : 1;
-                enemy.DamageEffect(Vector2.zero, damageFacingDirection);
+                PlayerManager.instance.player.GetComponent<PlayerStats>().DoDamage(enemy.GetComponent<EnemyStats>());
+                //enemy.DamageEffect(Vector2.zero, damageFacingDirection);
             }
                 
         }

@@ -37,6 +37,7 @@ public class CharacterStats : MonoBehaviour
     public Stat evasion;
 
     public int currentHealth;
+    //血条值改变事件
     public System.Action onHealthChanged;
     public bool isDead { get; private set; }
 
