@@ -12,11 +12,12 @@ public class UI_InGame : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthStat;
     private SkillManager skillManager;
     [SerializeField] private Image dashImage;
-
+    [SerializeField] private Image blackholeImage;
+    [SerializeField] private TextMeshProUGUI currencyText;
 
     private void Start()
     {
-        
+
 
         if (playerStats == null)
         {
@@ -31,12 +32,18 @@ public class UI_InGame : MonoBehaviour
             healthStat = GetComponentInChildren<TextMeshProUGUI>();
         }
 
+        //注册血条更新事件
         playerStats.onHealthChanged += Update_Health_UI;
         playerStats.onHealthChanged.Invoke();//初始化血条
 
+        //注册技能冷却UI事件
         skillManager = SkillManager.instance;
         skillManager.dash.OnSkillUiUpdated += () => SetCooldownOf(dashImage);
+        skillManager.blackhole.OnSkillUiUpdated += () => SetCooldownOf(blackholeImage);
 
+        //初始化冷却时间
+        dashImage.fillAmount = 0;
+        blackholeImage.fillAmount = 0;
     }
 
     private void Update()
@@ -46,7 +53,11 @@ public class UI_InGame : MonoBehaviour
         //    SetCooldownOf(dashImage);
         //    skillManager.dash.skillUiUpdated = false;
         //}
+        currencyText.text = "x" + PlayerManager.instance.GetCurrency().ToString("#,#");
+
+
         CheckCooldownOf(dashImage, skillManager.dash.cooldown);
+        CheckCooldownOf(blackholeImage, skillManager.blackhole.cooldown);
     }
 
     private void Update_Health_UI()
