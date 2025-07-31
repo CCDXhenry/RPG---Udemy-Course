@@ -13,6 +13,7 @@ public class SaveManager : MonoBehaviour
 
     [SerializeField] private string fileName;
     private FileDataHandler fileHandler;
+    [SerializeField] private bool isEcrypt;
 
     private void Awake()
     {
@@ -24,13 +25,26 @@ public class SaveManager : MonoBehaviour
         {
             Destroy(instance);
         }
+        //实例化文件处理类
+        fileHandler = new FileDataHandler(Application.persistentDataPath, fileName, isEcrypt);
     }
 
     private void Start()
     {
-        fileHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         saveManagers = FindALLSaveManagers();
         LoadGame();
+    }
+
+    public bool HasSaveFile()
+    {
+        return fileHandler.Load() != null ? true : false;
+    }
+
+    [ContextMenu("Delect Save File")]
+    public void DeleteSaveFile()
+    {
+        fileHandler = new FileDataHandler(Application.persistentDataPath, fileName, isEcrypt);
+        fileHandler.Delete();
     }
 
     public void NewGame()

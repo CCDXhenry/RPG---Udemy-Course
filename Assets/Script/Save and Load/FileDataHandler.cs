@@ -6,11 +6,13 @@ public class FileDataHandler
 {
     private string dataDirPath = "";
     private string dataFileName = "";
-
-    public FileDataHandler(string _dataDirPath, string _dataFileName)
+    private bool isEncrypt;
+    private readonly string codeWord = "JiaMiCodeWord";
+    public FileDataHandler(string _dataDirPath, string _dataFileName, bool _isEncrypt)
     {
         dataDirPath = _dataDirPath;
         dataFileName = _dataFileName;
+        isEncrypt = _isEncrypt;
     }
 
     public void Save(GameData _data)
@@ -22,6 +24,11 @@ public class FileDataHandler
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
             string dataToStore = JsonUtility.ToJson(_data, true);
+
+            if (isEncrypt)
+            {
+                dataToStore = EncryptDecrypt(dataToStore);
+            }
 
             using (FileStream stream = new FileStream(fullPath, FileMode.Create))
             {
@@ -51,17 +58,54 @@ public class FileDataHandler
                 {
                     using (StreamReader reader = new StreamReader(stream))
                     {
-                        dataToLoad =  reader.ReadToEnd();
+                        dataToLoad = reader.ReadToEnd();
                     }
+                }
+                if (isEncrypt)
+                {
+                    dataToLoad = EncryptDecrypt(dataToLoad);
                 }
                 loadData = JsonUtility.FromJson<GameData>(dataToLoad);
             }
             catch (Exception e)
             {
-                Debug.LogError("FillDataHandler - Load"+e);
+                Debug.LogError("FillDataHandler - Load" + e);
             }
         }
+        else
+        {
+            return null;
+        }
+
         return loadData;
+
+    }
+
+    public void Delete()
+    {
+        string fullPath = Path.Combine(dataDirPath, dataFileName);
+
+        if (File.Exists(fullPath))
+        {
+            try
+            {
+                File.Delete(fullPath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("FillDataHandler - Delete" + e);
+            }
+        }
+    }
+    /// <summary>异或加/解密函数</summary>
+    private string EncryptDecrypt(string _data)
+    {
+        string modifiedData = "";
+        for (int i = 0; i < _data.Length; i++)
+        {
+            modifiedData += (char)(_data[i] ^ codeWord[i % codeWord.Length]);
+        }
+        return modifiedData;
 
     }
 }

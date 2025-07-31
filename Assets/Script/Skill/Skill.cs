@@ -19,10 +19,15 @@ public class Skill : MonoBehaviour
     {
         cooldownTimer = 0;
         player = PlayerManager.instance.player;
+        CheckUnlock();
     }
     protected virtual void Update()
     {
         cooldownTimer -= Time.deltaTime;
+
+    }
+    public virtual void CheckUnlock()
+    {
 
     }
     public virtual void TriggerUiUpdate()

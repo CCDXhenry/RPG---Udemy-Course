@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, ISaveManager
 {
     public static Inventory instance; // Singleton instance
     //初始库存
@@ -29,6 +30,10 @@ public class Inventory : MonoBehaviour
     private UI_ItemSlot[] stashItemSlot;
     private UI_ItemSlot_Equipment[] equipmentItemSlot;
     private UI_StatSlot[] statSlots;
+
+    [Header("Data Base")]
+    [SerializeField] private List<InventoryItem> inventoryDataBase;
+    [SerializeField] private List<ItemData_Equipment> equipmentDataBase;
     private void Awake()
     {
         if (instance == null)
@@ -60,6 +65,20 @@ public class Inventory : MonoBehaviour
 
     private void AddinitialItems()
     {
+        foreach (var item in equipmentDataBase)
+        {
+            EquipItem(item, false);
+        }
+        if (inventoryDataBase.Count > 0)
+        {
+            foreach (var item in inventoryDataBase)
+            {
+                for (var i = 0; i < item.stackSize; i++)
+                    AddItem(item.data);
+            }
+            return;
+        }
+
         foreach (ItemData itemData in initialItems)
         {
             AddItem(itemData);
@@ -70,19 +89,18 @@ public class Inventory : MonoBehaviour
     /// 穿戴装备
     /// </summary>
     /// <param name="_item"></param>
-    public void EquipItem(ItemData _item)
+    /// <param name="isFromInventory">是否来自库存</param>
+    public void EquipItem(ItemData _item, bool isFromInventory)
     {
 
         ItemData_Equipment newEquipment = _item as ItemData_Equipment;
         InventoryItem newItem = new InventoryItem(newEquipment);
 
-        ItemData_Equipment oldEquipment = null;
-
+        // 替换装备
         foreach (KeyValuePair<ItemData_Equipment, InventoryItem> item in equipmentDictionary)
         {
             if (item.Key.equipmentType == newEquipment.equipmentType)
             {
-                oldEquipment = item.Key;
                 UnequipItem(item, false);
                 break;
             }
@@ -91,7 +109,9 @@ public class Inventory : MonoBehaviour
         equipmentItems.Add(newItem);
         equipmentDictionary[newEquipment] = newItem;
         newEquipment.AddModifiers(); // 增加装备属性
-        RemoveItem(_item);
+        // 如果是来自背包，则移除背包中的物品
+        if (isFromInventory)
+            RemoveItem(_item);
 
         //UpdateSlotUI();
     }
@@ -100,6 +120,7 @@ public class Inventory : MonoBehaviour
     /// 卸下装备
     /// </summary>
     /// <param name="item"></param>
+    ///<param name="isDrop">是否为丢弃</param>
     public void UnequipItem(KeyValuePair<ItemData_Equipment, InventoryItem> item, bool isDrop)
     {
         equipmentItems.Remove(item.Value);
@@ -303,5 +324,65 @@ public class Inventory : MonoBehaviour
             return stashItems.Count < stashItemSlot.Length;
         }
         return false; // 不支持的物品类型
+    }
+
+    public void LoadGame(GameData _gameData)
+    {
+        foreach (KeyValuePair<string, int> pair in _gameData.inventory)
+        {
+            foreach (var item in GetItemDataBase())
+            {
+                if (item != null && item.itemId == pair.Key)
+                {
+                    InventoryItem itemToLoad = new InventoryItem(item);
+                    itemToLoad.stackSize = pair.Value;
+                    inventoryDataBase.Add(itemToLoad);
+                }
+            }
+        }
+        foreach (string loadItemId in _gameData.equimentId)
+        {
+            foreach (var item in GetItemDataBase())
+            {
+                if (item != null && item.itemId == loadItemId)
+                {
+                    equipmentDataBase.Add(item as ItemData_Equipment);
+                }
+            }
+        }
+    }
+
+    public void SaveGame(ref GameData _gameData)
+    {
+        _gameData.inventory.Clear();
+        _gameData.equimentId.Clear();
+
+        foreach (var item in inventoryDictionary)
+        {
+            _gameData.inventory.Add(item.Key.itemId, item.Value.stackSize);
+        }
+
+        foreach (var item in stashDictionary)
+        {
+            _gameData.inventory.Add(item.Key.itemId, item.Value.stackSize);
+        }
+
+        foreach (var item in equipmentDictionary)
+        {
+            _gameData.equimentId.Add(item.Key.itemId);
+        }
+    }
+
+    private List<ItemData> GetItemDataBase()
+    {
+        List<ItemData> itemDataBase = new List<ItemData>();
+        string[] assetNames = AssetDatabase.FindAssets("", new[] { "Assets/Data/Item" });
+        foreach (var SOName in assetNames)
+        {
+            var SOpath = AssetDatabase.GUIDToAssetPath(SOName);
+            var itemData = AssetDatabase.LoadAssetAtPath<ItemData>(SOpath);
+            itemDataBase.Add(itemData);
+        }
+        return itemDataBase;
     }
 }

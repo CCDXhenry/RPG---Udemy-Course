@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler , IPointerEnterHandler, IPointerExitHandler
+public class UI_ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    
+
     [SerializeField] private Image itemImage;
     [SerializeField] private TextMeshProUGUI itemText;
 
@@ -50,8 +50,8 @@ public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler , IPointerEnterHa
         {
             if (item != null)
             {
-                Inventory.instance.EquipItem(item.data);
-                
+                Inventory.instance.EquipItem(item.data, true);
+
             }
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
@@ -65,7 +65,7 @@ public class UI_ItemSlot : MonoBehaviour , IPointerDownHandler , IPointerEnterHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(item != null)
+        if (item != null)
         {
             //Debug.Log("---------:" + item.data.itemName);
             ui.itemToolTip.ShowToolTip(item.data as ItemData_Equipment);

@@ -14,6 +14,9 @@ public class UI : MonoBehaviour
     public GameObject craftUI;
     public GameObject optionsUI;
     public GameObject inGameUI;
+    public GameObject darkScreenUI;
+    public GameObject gameOverUI;
+    public GameObject restartGameUI;
 
     private bool isUIOpen = false;
     private void Awake()
@@ -22,13 +25,13 @@ public class UI : MonoBehaviour
     }
     private void Start()
     {
-        
+
         isUIOpen = false;
         SwitchTo(inGameUI);
 
         itemToolTip.gameObject.SetActive(false);
         skillToolTip.gameObject.SetActive(false);
-        
+
     }
 
     private void Update()
@@ -66,7 +69,19 @@ public class UI : MonoBehaviour
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(false);
+            GameObject transformChild = transform.GetChild(i).gameObject;
+            // 设置darkScreenUI为不隐藏状态
+            if (transformChild == darkScreenUI)
+            {
+                if (!transformChild.activeSelf)
+                {
+                    transformChild.SetActive(true);
+                }
+            }
+            else
+            {
+                transformChild.SetActive(false);
+            }
         }
         if (_menu != null)
         {
@@ -90,5 +105,25 @@ public class UI : MonoBehaviour
     {
         SwitchTo(inGameUI);
         isUIOpen = false;
+    }
+
+    public void SwitchOnGameOverScreen()
+    {
+        SwitchTo(null);
+        darkScreenUI.GetComponent<UI_FadeScreen>().TriggerFadeOut();
+        StartCoroutine(GameOverScreenCorutione());
+    }
+
+    IEnumerator GameOverScreenCorutione()
+    {
+        yield return new WaitForSeconds(1);
+        gameOverUI.SetActive(true);
+        yield return new WaitForSeconds(1);
+        restartGameUI.SetActive(true);
+    }
+
+    public void RestartGameButton()
+    {
+        GameManage.instance.RestartScene();
     }
 }
