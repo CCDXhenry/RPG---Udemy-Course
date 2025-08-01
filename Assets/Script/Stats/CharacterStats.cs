@@ -125,7 +125,6 @@ public class CharacterStats : MonoBehaviour
         isDead = true;
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
-
     }
 
     public Stat GetStat(StatType statType)

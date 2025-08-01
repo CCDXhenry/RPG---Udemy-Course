@@ -20,6 +20,8 @@ public class PlayerDeadState : PlayerState
         rb.isKinematic = true;// 设置刚体为运动学模式，停止物理模拟
         rb.constraints = RigidbodyConstraints2D.FreezeAll;// 冻结旋转和移动
         GameObject.Find("Canvas - GameUI").GetComponent<UI>().SwitchOnGameOverScreen();
+        //保存游戏
+        SaveManager.instance.SaveGame();
     }
 
     public override void Exit()

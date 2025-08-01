@@ -61,7 +61,7 @@ public class UI_SkillTreeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 return;
             }
         }
-        if (!PlayerManager.instance.HaveEnoughCurrency(skillPrice))
+        if (!PlayerManager.instance.HaveEnoughSouls(skillPrice))
         {
             Debug.Log("金币不足,无法解锁");
             return;

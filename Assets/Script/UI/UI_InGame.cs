@@ -13,7 +13,10 @@ public class UI_InGame : MonoBehaviour
     private SkillManager skillManager;
     [SerializeField] private Image dashImage;
     [SerializeField] private Image blackholeImage;
-    [SerializeField] private TextMeshProUGUI currencyText;
+
+    [SerializeField] private TextMeshProUGUI currentSouls;
+    [SerializeField] private int soulFlowSpeed;// 灵魂改变时动态速度
+    private float currentSoulsValue;// 目标灵魂值
 
     private void Start()
     {
@@ -44,20 +47,36 @@ public class UI_InGame : MonoBehaviour
         //初始化冷却时间
         dashImage.fillAmount = 0;
         blackholeImage.fillAmount = 0;
+
+        //初始化灵魂UI变更速度
+        if (soulFlowSpeed == 0)
+        {
+            soulFlowSpeed = 10;
+        }
     }
 
     private void Update()
     {
-        //if (skillManager.dash.skillUiUpdated)
-        //{
-        //    SetCooldownOf(dashImage);
-        //    skillManager.dash.skillUiUpdated = false;
-        //}
-        currencyText.text = "x" + PlayerManager.instance.GetCurrency().ToString("#,#");
-
+        //更新灵魂数UI
+        UpdateSoulUI();
 
         CheckCooldownOf(dashImage, skillManager.dash.cooldown);
         CheckCooldownOf(blackholeImage, skillManager.blackhole.cooldown);
+    }
+
+    private void UpdateSoulUI()
+    {
+        float targetSoulValue = PlayerManager.instance.GetCurrentSouls();
+        if (currentSoulsValue != targetSoulValue)
+        {
+            currentSoulsValue = Mathf.Lerp(currentSoulsValue, targetSoulValue, Time.deltaTime * soulFlowSpeed);
+        }
+        if (Mathf.Abs(targetSoulValue - currentSoulsValue) < 0.5f)
+        {
+            currentSoulsValue = targetSoulValue;
+        }
+
+        currentSouls.text = "x" + (int)currentSoulsValue;
     }
 
     private void Update_Health_UI()

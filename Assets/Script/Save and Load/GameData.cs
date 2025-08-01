@@ -6,15 +6,32 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    public int currency;//金币数
+    public int currentSouls;//灵魂数
+    public int lostSouls;//失去灵魂数
+    public Vector3 lostSoulsTransposition;//失去灵魂的位置
+
+    public Vector3 currentCheckpointTransfrom; //当前存档点位置
+    public SerializableDictionary<string, Vector3> sceneSpawnPoint;//主场景出生点
+
     public SerializableDictionary<string, int> inventory;//背包
     public List<string> equimentId;//装备
     public SerializableDictionary<string, bool> skillTree;//技能树
+    public SerializableDictionary<string, bool> checkpoints;//存档点
     public GameData()
     {
-        this.currency = 0;
+        this.currentSouls = 0;
+        this.lostSouls = 0;
+        this.lostSoulsTransposition = new Vector3();
         this.inventory = new SerializableDictionary<string, int>();
         this.equimentId = new List<string>();
         this.skillTree = new SerializableDictionary<string, bool>();
+        this.checkpoints = new SerializableDictionary<string, bool>();
+        this.currentCheckpointTransfrom = new Vector3();
+    }
+
+    private void InitSceneSpawnPoint()
+    {
+        this.sceneSpawnPoint = new SerializableDictionary<string, Vector3>();
+        this.sceneSpawnPoint.Add("MainScene", new Vector3(-6f, 2f, 0));
     }
 }
