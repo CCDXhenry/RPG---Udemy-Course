@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour ,ISaveManager
 {
-    private Animator anim;
+    [SerializeField] private Animator anim;
     public string checkpointId;
     public bool isActive;
     private void Start()
     {
-        anim = GetComponentInChildren<Animator>();
+        //anim = GetComponentInChildren<Animator>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

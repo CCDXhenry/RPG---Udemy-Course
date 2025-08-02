@@ -31,7 +31,6 @@ public class GameManage : MonoBehaviour, ISaveManager
     {
         if (_gameData.lostSouls > 0)
         {
-            Debug.Log(_gameData.lostSouls);
             lostSouls = _gameData.lostSouls;
             lostSoulsTransposition = _gameData.lostSoulsTransposition;
             GameObject lostSoulUI = Instantiate(lostSoulsPrefab, lostSoulsTransposition, Quaternion.identity);
@@ -43,5 +42,17 @@ public class GameManage : MonoBehaviour, ISaveManager
     {
         _gameData.lostSouls = lostSouls;
         _gameData.lostSoulsTransposition = lostSoulsTransposition;
+    }
+
+    public void PauseGame(bool _pause)
+    {
+        if (_pause)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
     }
 }

@@ -25,6 +25,8 @@ public class Entity : MonoBehaviour
     [SerializeField] public LayerMask groundLayer;
     [SerializeField] public Transform groundCheck;
     [SerializeField] private float groundCheckDistance = 0.2f;
+    public Vector3 lastGroundCheckTransposition;
+
     [SerializeField] public LayerMask wallLayer;
     [SerializeField] public Transform wallCheck;
     [SerializeField] private float wallCheckDistance = 0.2f;
@@ -57,12 +59,11 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-
     }
 
-    public virtual void DamageEffect(Vector2 _knockbackVector,int facingDirection)
+    public virtual void DamageEffect(Vector2 _knockbackVector, int facingDirection)
     {
-        if(_knockbackVector == Vector2.zero)
+        if (_knockbackVector == Vector2.zero)
             _knockbackVector = knockbackVector;
 
         //Debug.Log(gameObject.name + " was damage " + _knockbackVector);
@@ -70,7 +71,7 @@ public class Entity : MonoBehaviour
         StartCoroutine(HitKnockback(_knockbackVector, facingDirection));
     }
 
-    protected virtual IEnumerator HitKnockback(Vector2 _knockbackDirection,int facingDirection)
+    protected virtual IEnumerator HitKnockback(Vector2 _knockbackDirection, int facingDirection)
     {
         isKnocked = true;
         rb.velocity = new Vector2(_knockbackDirection.x * facingDirection, _knockbackDirection.y);
@@ -86,8 +87,11 @@ public class Entity : MonoBehaviour
         FlipController(x);
     }
 
-    public bool IsGroundedDetected() =>
-        Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+    public virtual bool IsGroundedDetected()
+    {
+        return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+    }
+
 
     public bool IsWallDetected() =>
         Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, wallCheckDistance, groundLayer);

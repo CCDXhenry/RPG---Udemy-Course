@@ -101,7 +101,7 @@ public class Enemy : Entity
     }
 
     public virtual RaycastHit2D IsPlayerDetected() =>
-        Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, 50, PlayerMask);
+        Physics2D.Raycast(transform.position, Vector2.right * facingDirection, 50, PlayerMask);
 
     public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 

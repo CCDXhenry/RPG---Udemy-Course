@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : CharacterStats 
+public class PlayerStats : CharacterStats
 {
 
-    protected override void Die()
+    public override void Die()
     {
-        
+
         //装备物品掉落
         PlayerItemDrop playerItemDrop = GetComponent<PlayerItemDrop>();
         if (playerItemDrop != null)
@@ -17,7 +17,15 @@ public class PlayerStats : CharacterStats
 
         //灵魂数掉落
         GameManage.instance.lostSouls = PlayerManager.instance.currentSouls;
-        GameManage.instance.lostSoulsTransposition = PlayerManager.instance.player.transform.position;
+        //判断是否在死亡区域
+        if (isDeadZone)
+        {
+            GameManage.instance.lostSoulsTransposition = PlayerManager.instance.player.lastGroundCheckTransposition;
+        }
+        else
+        {
+            GameManage.instance.lostSoulsTransposition = PlayerManager.instance.player.transform.position;
+        }
         PlayerManager.instance.currentSouls = 0;
 
         //触发死亡动画

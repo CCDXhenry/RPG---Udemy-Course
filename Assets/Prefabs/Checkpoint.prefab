@@ -138,6 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b7a1684a9aa004ca97e5a6d3c4c334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 6911136088564442937}
   checkpointId: 
   isActive: 0
 --- !u!1 &3562968433966135197

@@ -11,12 +11,13 @@ public class GameData
     public Vector3 lostSoulsTransposition;//失去灵魂的位置
 
     public Vector3 currentCheckpointTransfrom; //当前存档点位置
-    public SerializableDictionary<string, Vector3> sceneSpawnPoint;//主场景出生点
+    public SerializableDictionary<string, Vector3> sceneSpawnPoint;//人物场景出生点
 
     public SerializableDictionary<string, int> inventory;//背包
     public List<string> equimentId;//装备
     public SerializableDictionary<string, bool> skillTree;//技能树
     public SerializableDictionary<string, bool> checkpoints;//存档点
+    public SerializableDictionary<string, float> volumeSlider;//音量
     public GameData()
     {
         this.currentSouls = 0;
@@ -27,8 +28,12 @@ public class GameData
         this.skillTree = new SerializableDictionary<string, bool>();
         this.checkpoints = new SerializableDictionary<string, bool>();
         this.currentCheckpointTransfrom = new Vector3();
+        this.volumeSlider = new SerializableDictionary<string, float>();
     }
 
+    /// <summary>
+    /// 人物场景出生点初始化
+    /// </summary>
     private void InitSceneSpawnPoint()
     {
         this.sceneSpawnPoint = new SerializableDictionary<string, Vector3>();

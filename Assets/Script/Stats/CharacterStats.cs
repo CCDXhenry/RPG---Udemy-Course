@@ -40,7 +40,7 @@ public class CharacterStats : MonoBehaviour
     //血条值改变事件
     public System.Action onHealthChanged;
     public bool isDead { get; private set; }
-
+    public bool isDeadZone;
     protected virtual void Start()
     {
         entity = GetComponent<Entity>();
@@ -120,7 +120,7 @@ public class CharacterStats : MonoBehaviour
         }
 
     }
-    protected virtual void Die()
+    public virtual void Die()
     {
         isDead = true;
         Debug.Log($"{gameObject.name} has died.");

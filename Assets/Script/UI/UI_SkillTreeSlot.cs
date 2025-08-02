@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UI_SkillTreeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISaveManager
 {
-    private UI ui;
+    private UI_Controller ui;
 
 
     public bool unlocked = false;
@@ -34,7 +34,7 @@ public class UI_SkillTreeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     private void Start()
     {
-        ui = GetComponentInParent<UI>();
+        ui = GetComponentInParent<UI_Controller>();
         skillImage = GetComponent<Image>();
         skillImage.color = Color.white * 0.5f;
         if (unlocked)

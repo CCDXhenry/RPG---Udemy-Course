@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719f72da47c03354684c6303acc2575b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lostSoulsController: {fileID: 2851408034988955977}
 --- !u!1 &2523006340758669582
 GameObject:
   m_ObjectHideFlags: 0

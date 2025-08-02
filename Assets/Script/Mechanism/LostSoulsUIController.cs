@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class LostSoulsUIController : MonoBehaviour
 {
-    private LostSoulsController lostSoulsController;
-    void Start()
+    [SerializeField] private LostSoulsController lostSoulsController;
+    void Awake()
     {
-        lostSoulsController = GetComponentInChildren<LostSoulsController>();
         lostSoulsController.OnLostSoulsTriggered += HandleTrigger;
     }
 

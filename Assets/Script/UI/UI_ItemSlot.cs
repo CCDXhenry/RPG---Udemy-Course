@@ -11,11 +11,11 @@ public class UI_ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
     [SerializeField] private Image itemImage;
     [SerializeField] private TextMeshProUGUI itemText;
 
-    private UI ui;
+    private UI_Controller ui;
     public InventoryItem item;
     private void Start()
     {
-        ui = GetComponentInParent<UI>();
+        ui = GetComponentInParent<UI_Controller>();
     }
     public virtual void UpdateItemSlotUI(InventoryItem _newItem)
     {

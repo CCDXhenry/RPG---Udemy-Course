@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 
 public class Player : Entity
 {
+    public Tilemap groundTilemap; // 绑定地面的Tilemap
     [Header("Move info")]
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] public float jumpForce = 10f;
@@ -35,6 +37,9 @@ public class Player : Entity
 
     public GameObject sword { get; private set; }
     public float swordReturnImpact = 10f; // Placeholder for future sword return impact
+
+    //人物属性
+    public PlayerStats playerStats { get; private set; }
 
     #region States
 
@@ -79,11 +84,16 @@ public class Player : Entity
         base.Start();
         skill = SkillManager.instance;
         stateMachine.Initialize(idleState);
+        playerStats = GetComponent<PlayerStats>();
     }
 
     protected override void Update()
     {
         base.Update();
+        if (Time.timeScale == 0 || playerStats.isDead)
+        {
+            return;
+        }
         stateMachine.currentState.Update();
         CheckForDashInput();
         if (Input.GetKeyDown(KeyCode.F))
@@ -162,4 +172,35 @@ public class Player : Entity
         base.Die();
         stateMachine.ChangeState(deadState);
     }
+
+    protected override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+        Vector3 tileCenter = GetTileCenterTrans();
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(tileCenter, 0.1f);
+    }
+    public override bool IsGroundedDetected()
+    {
+        bool isGrounded =  base.IsGroundedDetected();
+        if (isGrounded)
+        {
+            var tileCenter = GetTileCenterTrans();
+            lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y, transform.position.z);
+        }
+        return isGrounded;
+
+    }
+
+    /// <summary>
+    /// 获取人物所在格子中心点,用于死区掉魂坐标判断(实测下来,好像没啥用)
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 GetTileCenterTrans()
+    {
+        Vector3Int cellPos = groundTilemap.WorldToCell(transform.position);
+        Vector3 tileCenter = groundTilemap.GetCellCenterWorld(cellPos);
+        return tileCenter;
+    }
+
 }

@@ -21,6 +21,11 @@ public class PlayerWallSlideState : PlayerState
     public override void Update()
     {
         base.Update();
+        if (!player.IsWallDetected())
+        {
+            stateMachine.ChangeState(player.idleState);
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (xInput * player.facingDirection <= 0)

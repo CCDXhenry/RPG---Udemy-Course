@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI : MonoBehaviour
+public class UI_Controller : MonoBehaviour
 {
     public UI_ItemToolTip itemToolTip;
     public UI_SkillToolTip skillToolTip;
@@ -19,23 +19,29 @@ public class UI : MonoBehaviour
     public GameObject restartGameUI;
 
     private bool isUIOpen = false;
+    private bool isGameOver = false;
     private void Awake()
     {
-        SwitchTo(skillTreeUI);//awake技能按钮监听事件
+        SwitchTo(skillTreeUI);
+        SwitchTo(optionsUI);
     }
     private void Start()
     {
 
         isUIOpen = false;
         SwitchTo(inGameUI);
-
+        
         itemToolTip.gameObject.SetActive(false);
         skillToolTip.gameObject.SetActive(false);
-
     }
 
     private void Update()
     {
+        if (isGameOver)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isUIOpen)
@@ -87,6 +93,17 @@ public class UI : MonoBehaviour
         {
             _menu.SetActive(true);
             isUIOpen = true;
+            if (GameManage.instance != null)
+            {
+                if (_menu != inGameUI)
+                {
+                    GameManage.instance.PauseGame(true);
+                }
+                else
+                {
+                    GameManage.instance.PauseGame(false);
+                }
+            }
         }
     }
 
@@ -116,6 +133,7 @@ public class UI : MonoBehaviour
 
     IEnumerator GameOverScreenCorutione()
     {
+        isGameOver = true;
         yield return new WaitForSeconds(1);
         gameOverUI.SetActive(true);
         yield return new WaitForSeconds(1);

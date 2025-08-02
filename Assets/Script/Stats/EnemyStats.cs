@@ -49,7 +49,7 @@ public class EnemyStats : CharacterStats
             _stat.AddModifier(Mathf.RoundToInt(modifier));
         }
     }
-    protected override void Die()
+    public override void Die()
     {
         base.Die();
 
@@ -62,5 +62,7 @@ public class EnemyStats : CharacterStats
 
         // 掉落灵魂数
         PlayerManager.instance.currentSouls += dropSouls.GetValue();
+
+        Destroy(gameObject, 5f);
     }
 }
