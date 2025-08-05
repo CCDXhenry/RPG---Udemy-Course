@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(EntityFX))]
+[RequireComponent(typeof(CapsuleCollider2D))]
+
+
 public class Entity : MonoBehaviour
 {
     #region Components
@@ -14,6 +20,7 @@ public class Entity : MonoBehaviour
 
     public CharacterStats stats { get; private set; } // 人物属性脚本，包含生命值、伤害等信息
     public CapsuleCollider2D cr { get; private set; }
+
     #endregion
     #region Event
     public System.Action onFlipped;
@@ -122,6 +129,11 @@ public class Entity : MonoBehaviour
         {
             Flip();
         }
+    }
+    public void SetDefaultFacingDirection()
+    {
+        facingRight = !facingRight;
+        facingDirection *= -1;
     }
 
     public void MakeTransparent(bool _transparent)

@@ -7,9 +7,17 @@ using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
-    [SerializeField] private Slider healthBar;
+
+    [SerializeField] private Slider healthBarPlayer;
+    [SerializeField] private Slider healthBarBoss;
+
     [SerializeField] private PlayerStats playerStats;
-    [SerializeField] private TextMeshProUGUI healthStat;
+    public EnemyStats enemyStats;
+    public TextMeshProUGUI bossName;
+
+    [SerializeField] private TextMeshProUGUI healthStatPlayer;
+    [SerializeField] private TextMeshProUGUI healthStatBoss;
+
     private SkillManager skillManager;
     [SerializeField] private Image dashImage;
     [SerializeField] private Image blackholeImage;
@@ -21,23 +29,16 @@ public class UI_InGame : MonoBehaviour
     private void Start()
     {
 
-
-        if (playerStats == null)
-        {
-            playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
-        }
-        if (healthBar == null)
-        {
-            healthBar = GetComponentInChildren<Slider>();
-        }
-        if (healthStat == null)
-        {
-            healthStat = GetComponentInChildren<TextMeshProUGUI>();
-        }
+        playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
+        //enemyStats = GameObject.Find("Enemy_BringerOfDeath").GetComponent<EnemyStats>();
 
         //注册血条更新事件
-        playerStats.onHealthChanged += Update_Health_UI;
-        playerStats.onHealthChanged.Invoke();//初始化血条
+        playerStats.onHealthChanged += () => Update_Health_UI(playerStats, healthBarPlayer, healthStatPlayer);
+        //enemyStats.onHealthChanged += () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
+
+        //初始化血条
+        playerStats.onHealthChanged.Invoke();
+        //enemyStats.onHealthChanged.Invoke();
 
         //注册技能冷却UI事件
         skillManager = SkillManager.instance;
@@ -62,8 +63,25 @@ public class UI_InGame : MonoBehaviour
 
         CheckCooldownOf(dashImage, skillManager.dash.cooldown);
         CheckCooldownOf(blackholeImage, skillManager.blackhole.cooldown);
-    }
 
+        //判断Boss血条是否显示
+        if (enemyStats == null)
+        {
+            if (healthBarBoss.gameObject.activeSelf)
+                healthBarBoss.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (!healthBarBoss.gameObject.activeSelf)
+                healthBarBoss.gameObject.SetActive(true);
+            enemyStats.onHealthChanged += () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
+            enemyStats.onHealthChanged.Invoke();
+        }
+    }
+    private void GetBossInfo()
+    {
+
+    }
     private void UpdateSoulUI()
     {
         float targetSoulValue = PlayerManager.instance.GetCurrentSouls();
@@ -79,10 +97,11 @@ public class UI_InGame : MonoBehaviour
         currentSouls.text = "x" + (int)currentSoulsValue;
     }
 
-    private void Update_Health_UI()
+    private void Update_Health_UI(CharacterStats characterStats, Slider healthBar, TextMeshProUGUI healthStat)
     {
-        healthBar.maxValue = playerStats.GetMaxHealthValue();
-        healthBar.value = playerStats.currentHealth;
+        healthBar.maxValue = characterStats.GetMaxHealthValue();
+        healthBar.value = characterStats.currentHealth;
+
         healthStat.text = healthBar.value + "/" + healthBar.maxValue;
         float healthPercentage = healthBar.value / healthBar.maxValue;
         if (healthPercentage > .8f)
@@ -117,6 +136,7 @@ public class UI_InGame : MonoBehaviour
     private void OnDestroy()
     {
         skillManager.dash.OnSkillUiUpdated -= () => SetCooldownOf(dashImage);
-        playerStats.onHealthChanged -= Update_Health_UI;
+        playerStats.onHealthChanged -= () => Update_Health_UI(playerStats, healthBarPlayer, healthStatPlayer);
+        enemyStats.onHealthChanged -= () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
     }
 }

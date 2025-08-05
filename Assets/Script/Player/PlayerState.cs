@@ -6,7 +6,7 @@ public class PlayerState
 {
     protected PlayerStateMachine stateMachine;
     protected Player player;
-    protected string animBoolName;
+    public string animBoolName;
     protected float xInput;
     protected float yInput;
     public float stateTime;

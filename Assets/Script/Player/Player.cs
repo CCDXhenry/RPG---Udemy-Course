@@ -146,24 +146,22 @@ public class Player : Entity
         isVibrating = true;
         stateMachine.ChangeState(idleState);
         StartCoroutine(BusyFor(duration));
-        Vector3 originalPosition = transform.position; // 值类型复制，后续不再更新
+        float originalPositionX = rb.position.x;
 
         float elapsedTime = 0f;
         while (elapsedTime < duration)
         {
             // 随机偏移X轴
-            transform.position = new Vector3(
-                originalPosition.x + Random.Range(-0.05f, 0.05f),
-                transform.position.y,
-                transform.position.z
-            );
-
+            rb.MovePosition(new Vector3(
+                originalPositionX + Random.Range(-0.05f, 0.05f),
+                rb.position.y
+            ));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = new Vector3(originalPosition.x, transform.position.y, transform.position.z); // 精确还原
-        yield return new WaitForSeconds(0.5f); // 短暂停顿
+        rb.MovePosition (new Vector3(originalPositionX, rb.position.y)); // 精确还原
+        yield return new WaitForSeconds(0.5f);
         isVibrating = false; // 重置震动状态
     }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
+[RequireComponent(typeof(ItemDrop))]
+[RequireComponent(typeof(EnemyStats))]
 public class Enemy : Entity
 {
     [Header("Stunned Info")]
@@ -16,6 +18,7 @@ public class Enemy : Entity
     public float moveSpeed;
     private float originalMoveSpeed;
     public float idleTime;
+    public float bufferPeriod;// 缓冲时间
 
     [Header("Attack Info")]
     public float attackDistance;
