@@ -35,7 +35,6 @@ public class EnemyState
     public virtual void AnimationFinishTrigger()
     {
         triggerCalled = true;
-
     }
 
 }

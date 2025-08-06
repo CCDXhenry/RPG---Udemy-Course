@@ -13,12 +13,14 @@ public class PlayerDashState : PlayerState
         base.Enter();
         stateTime = player.dashDuration;
         player.skill.dash.CanUseDashClone();
+        player.stats.SetInvincible(true);
     }
 
     public override void Exit()
     {
         base.Exit();
         player.SetVelocity(0, rb.velocity.y); // Reset horizontal velocity after dash
+        player.stats.SetInvincible(false);
     }
 
     public override void Update()
@@ -35,4 +37,5 @@ public class PlayerDashState : PlayerState
             stateMachine.ChangeState(player.idleState); // Change to air state after dash
         }
     }
+
 }

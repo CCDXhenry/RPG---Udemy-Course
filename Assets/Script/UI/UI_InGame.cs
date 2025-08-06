@@ -21,6 +21,8 @@ public class UI_InGame : MonoBehaviour
     private SkillManager skillManager;
     [SerializeField] private Image dashImage;
     [SerializeField] private Image blackholeImage;
+    [SerializeField] private Image swordImage;
+    [SerializeField] private Image crystalImage;
 
     [SerializeField] private TextMeshProUGUI currentSouls;
     [SerializeField] private int soulFlowSpeed;// 灵魂改变时动态速度
@@ -44,10 +46,14 @@ public class UI_InGame : MonoBehaviour
         skillManager = SkillManager.instance;
         skillManager.dash.OnSkillUiUpdated += () => SetCooldownOf(dashImage);
         skillManager.blackhole.OnSkillUiUpdated += () => SetCooldownOf(blackholeImage);
+        skillManager.sword.OnSkillUiUpdated += () => SetCooldownOf(swordImage);
+        skillManager.crystal.OnSkillUiUpdated += () => SetCooldownOf(crystalImage);
 
         //初始化冷却时间
         dashImage.fillAmount = 0;
         blackholeImage.fillAmount = 0;
+        swordImage.fillAmount = 0;
+        crystalImage.fillAmount = 0;
 
         //初始化灵魂UI变更速度
         if (soulFlowSpeed == 0)
@@ -56,6 +62,7 @@ public class UI_InGame : MonoBehaviour
         }
     }
 
+
     private void Update()
     {
         //更新灵魂数UI
@@ -63,6 +70,8 @@ public class UI_InGame : MonoBehaviour
 
         CheckCooldownOf(dashImage, skillManager.dash.cooldown);
         CheckCooldownOf(blackholeImage, skillManager.blackhole.cooldown);
+        CheckCooldownOf(swordImage, skillManager.sword.cooldown);
+        CheckCooldownOf(crystalImage, skillManager.crystal.cooldown);
 
         //判断Boss血条是否显示
         if (enemyStats == null)
@@ -136,7 +145,11 @@ public class UI_InGame : MonoBehaviour
     private void OnDestroy()
     {
         skillManager.dash.OnSkillUiUpdated -= () => SetCooldownOf(dashImage);
+        skillManager.blackhole.OnSkillUiUpdated -= () => SetCooldownOf(blackholeImage);
+        skillManager.sword.OnSkillUiUpdated -= () => SetCooldownOf(swordImage);
+        skillManager.crystal.OnSkillUiUpdated -= () => SetCooldownOf(crystalImage);
         playerStats.onHealthChanged -= () => Update_Health_UI(playerStats, healthBarPlayer, healthStatPlayer);
-        enemyStats.onHealthChanged -= () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
+        if(enemyStats != null)
+            enemyStats.onHealthChanged -= () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
     }
 }

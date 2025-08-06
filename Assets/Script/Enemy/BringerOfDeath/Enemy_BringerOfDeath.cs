@@ -32,7 +32,7 @@ public class Enemy_BringerOfDeath : Enemy
     [Header("Teleport Info")]
     [SerializeField] private Vector2 saveTransPosition;
 
-    [Range(0,1)]
+    [Range(0, 1)]
     public float teleportProbability = 0.5f;//瞬移技能触发概率
     private Vector2 lastCheckPos;         // 记录上一次检测的位置
     private Vector2 lastCheckSize;       // 记录上一次检测的尺寸
@@ -48,6 +48,10 @@ public class Enemy_BringerOfDeath : Enemy
     public BODTeleportBeforeState teleportBeforeState { get; private set; }
     public BODTeleportAfterState teleportAfterState { get; private set; }
     public BODBlackHandState blackHandState { get; private set; }
+    public BODDeadState deadState { get; private set; }
+    public BODStunnedState stunnedState { get; private set; }
+    public BODAttackBeforeState attackBeforeState { get; private set; }
+    public BODAttackAfterState attackAfterState { get; private set; }
 
     #endregion
 
@@ -60,16 +64,16 @@ public class Enemy_BringerOfDeath : Enemy
         teleportBeforeState = new BODTeleportBeforeState(stateMachine, this, "TeleportBefore", this);
         teleportAfterState = new BODTeleportAfterState(stateMachine, this, "TeleportAfter", this);
         blackHandState = new BODBlackHandState(stateMachine, this, "BlackHand", this);
+        deadState = new BODDeadState(stateMachine, this, "Die", this);
+        stunnedState = new BODStunnedState(stateMachine, this, "Stunned", this);
+        attackBeforeState = new BODAttackBeforeState(stateMachine, this,"AttackBefore",this);
+        attackAfterState = new BODAttackAfterState(stateMachine, this, "AttackAfter", this);
 
         battleRangeTrigger.battleRangeonTriggerEnter += SetBattle;
         battleRangeTrigger.battleRangeonTriggerExit += SetBattle;
         SetDefaultFacingDirection();
     }
 
-    private void Set()
-    {
-        throw new System.NotImplementedException();
-    }
 
     protected override void Start()
     {
@@ -81,16 +85,19 @@ public class Enemy_BringerOfDeath : Enemy
     {
         base.Update();
     }
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
     private void SetBattle()
     {
         if (isBattle)
         {
             isBattle = false;
+            AudioManager.instance.PlayBGM(0);
         }
         else
         {
             isBattle = true;
+            AudioManager.instance.PlayBGM(1);
             ui.inGameUI.GetComponent<UI_InGame>().enemyStats = GetComponent<EnemyStats>();
             ui.inGameUI.GetComponent<UI_InGame>().bossName.text = bossName;
         }
@@ -293,5 +300,19 @@ public class Enemy_BringerOfDeath : Enemy
             Gizmos.DrawLine(prevPoint, nextPoint);
             prevPoint = nextPoint;
         }
+    }
+    public override bool CanBeStunned()
+    {
+        if (base.CanBeStunned())
+        {
+            stateMachine.ChangeState(stunnedState);
+            return true;
+        }
+        return false;
+    }
+    public override void Die()
+    {
+        base.Die();
+        stateMachine.ChangeState(deadState);
     }
 }

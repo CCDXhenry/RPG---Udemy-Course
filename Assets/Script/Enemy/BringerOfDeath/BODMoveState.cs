@@ -26,9 +26,15 @@ public class BODMoveState : BODGroundState
         //enemy移动
         if (enemy.isBattle)
         {
+            if (!CheckMinDistance())
+            {
+                return;
+            }
             enemy.rb.velocity = new Vector3(enemy.moveSpeed * enemy.facingDirection, enemy.rb.velocity.y);
         }
 
 
     }
+
+    
 }

@@ -36,9 +36,13 @@ public class BODIdleState : BODGroundState
                     enemy.teleportEnum = BODTeleportEnum.attack;
                     stateMachine.ChangeState(enemy.teleportBeforeState);
                     Debug.Log("判断缓冲时间,尝试触发瞬移技能,触发成功");
+                    return;
                 }
             }
+            //判断enemy与玩家的距离,大于最小距离就切换至移动状态
+            CheckMinDistance();
         }
-        
     }
+
 }
+

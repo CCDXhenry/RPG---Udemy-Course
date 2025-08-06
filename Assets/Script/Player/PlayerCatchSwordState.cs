@@ -12,6 +12,8 @@ public class PlayerCatchSwordState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        //AudioManager.instance.PlaySFX(18);
+        AudioManager.instance.StopSFX(19);
         swordTransform = player.sword.transform;
         if(swordTransform.position.x > player.transform.position.x && player.facingDirection == -1)
         {

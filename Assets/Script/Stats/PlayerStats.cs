@@ -27,7 +27,8 @@ public class PlayerStats : CharacterStats
             GameManage.instance.lostSoulsTransposition = PlayerManager.instance.player.transform.position;
         }
         PlayerManager.instance.currentSouls = 0;
-
+        AudioManager.instance.PlaySFX(11);
+        AudioManager.instance.PlaySFX(20);
         //触发死亡动画
         base.Die();
     }

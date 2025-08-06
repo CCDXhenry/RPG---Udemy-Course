@@ -25,11 +25,11 @@ public class PlayerGroundedState : PlayerState
         {
             stateMachine.ChangeState(player.blackholeState);
         }
-        if (Input.GetKeyDown(KeyCode.Mouse1) && HasNoSword())
+        if (Input.GetKeyDown(KeyCode.Mouse1) && HasNoSword() && SkillManager.instance.sword.CanUseSkill(false))
         {
             stateMachine.ChangeState(player.aimSwordState);
         }
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && SkillManager.instance.counterAttack.CanUseSkill(true))
         {
             stateMachine.ChangeState(player.counterAttackState);
         }

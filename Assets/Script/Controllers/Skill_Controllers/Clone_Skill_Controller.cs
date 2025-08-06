@@ -52,6 +52,7 @@ public class Clone_Skill_Controller : MonoBehaviour
 
     private void AttackTrigger()
     {
+        AudioManager.instance.PlaySFX(2);
         Collider2D[] colliders = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
         foreach (var hit in colliders)
         {
@@ -60,6 +61,7 @@ public class Clone_Skill_Controller : MonoBehaviour
                 int damageFacingDirection = (transform.position.x > enemy.transform.position.x) ? -1 : 1;
                 PlayerManager.instance.player.GetComponent<PlayerStats>().DoDamage(enemy.GetComponent<EnemyStats>());
                 //enemy.DamageEffect(Vector2.zero, damageFacingDirection);
+                AudioManager.instance.PlaySFX(22);
             }
                 
         }

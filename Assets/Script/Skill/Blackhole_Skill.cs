@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class Blackhole_Skill : Skill
 {
-    [SerializeField] private GameObject blackholePrefab; // ºÚ¶´Ô¤ÖÆÌå
-    [SerializeField] private float maxSize; // ºÚ¶´×î´ó³ß´ç
+    [SerializeField] private GameObject blackholePrefab; // é»‘æ´é¢„åˆ¶ä½“
+    [SerializeField] private float maxSize; // é»‘æ´æœ€å¤§å°ºå¯¸
     [SerializeField] private float growSpeed;
-    [SerializeField] private float shrinkSpeed; // ºÚ¶´ËõĞ¡ËÙ¶È
-    [SerializeField] private float cloneCounts; // ¿ËÂ¡¼ÆÊı
-    [SerializeField] private float blackholeDuration;// ºÚ¶´³ÖĞøÊ±¼ä
+    [SerializeField] private float shrinkSpeed; // é»‘æ´ç¼©å°é€Ÿåº¦
+    [SerializeField] private float cloneCounts; // å…‹éš†è®¡æ•°
+    [SerializeField] private float blackholeDuration;// é»‘æ´æŒç»­æ—¶é—´
 
-    [HideInInspector] public Blackhole_Skill_Controller blackholeController; // ºÚ¶´¼¼ÄÜ¿ØÖÆÆ÷ÊµÀı
+    [HideInInspector] public Blackhole_Skill_Controller blackholeController; // é»‘æ´æŠ€èƒ½æ§åˆ¶å™¨å®ä¾‹
 
     private void CreateBlackhole()
     {
-        base.UseSkill();
         GameObject blackhole = Instantiate(blackholePrefab, player.transform.position, Quaternion.identity);
         blackholeController = blackhole.GetComponent<Blackhole_Skill_Controller>();
         if (blackholeController != null)
@@ -31,14 +30,15 @@ public class Blackhole_Skill : Skill
     public override void UseSkill()
     {
         base.UseSkill();
-        CreateBlackhole(); // µ÷ÓÃ´´½¨ºÚ¶´µÄ·½·¨
+        CreateBlackhole(); // è°ƒç”¨åˆ›å»ºé»‘æ´çš„æ–¹æ³•
+        AudioManager.instance.PlaySFX(3);
     }
 
     public bool SkillCompleted()
     {
         if (!blackholeController.isBlackholeActive)
         {
-            blackholeController = null; // Çå³ıºÚ¶´¿ØÖÆÆ÷ÊµÀı
+            blackholeController = null; // æ¸…é™¤é»‘æ´æ§åˆ¶å™¨å®ä¾‹
             return true;
         }
         return false;

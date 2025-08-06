@@ -28,7 +28,7 @@ public class BODTeleportAfterState : EnemyState
         {
             if (enemy.teleportEnum == BODTeleportEnum.attack)
             {
-                stateMachine.ChangeState(enemy.moveState);
+                stateMachine.ChangeState(enemy.idleState);
             }
         }
 

@@ -22,14 +22,18 @@ public class Dash_Skill : Skill
     {
         base.UseSkill();
         Debug.Log("dash used");
+        AudioManager.instance.PlaySFX(21);
     }
-
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         dashUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDash);
         dashCloneUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDashClone);
         DashCloneMoreUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDashCloneMore);
+    }
+    protected override void Start()
+    {
+        base.Start();
+        
     }
     public override void CheckUnlock()
     {

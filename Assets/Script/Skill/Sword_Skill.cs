@@ -14,29 +14,29 @@ public class Sword_Skill : Skill
     public SwordType swordType = SwordType.Regular;
 
     [Header("Spin info")]
-    [SerializeField] private float maxTravelDistance; //×î´óÒÆ¶¯¾àÀë
-    [SerializeField] private float spinDuration; //Ğı×ª³ÖĞøÊ±¼ä
-    [SerializeField] private float spinGravity; //Ğı×ªÖØÁ¦
-    [SerializeField] private float spinHitCooldown; //Ğı×ªÀäÈ´Ê±¼ä
+    [SerializeField] private float maxTravelDistance; //æœ€å¤§ç§»åŠ¨è·ç¦»
+    [SerializeField] private float spinDuration; //æ—‹è½¬æŒç»­æ—¶é—´
+    [SerializeField] private float spinGravity; //æ—‹è½¬é‡åŠ›
+    [SerializeField] private float spinHitCooldown; //æ—‹è½¬å†·å´æ—¶é—´
 
     [Header("Bounce info")]
-    [SerializeField] private int bounceCount; //·´µ¯´ÎÊı
-    [SerializeField] private float bounceGravity; //·´µ¯ÖØÁ¦
+    [SerializeField] private int bounceCount; //åå¼¹æ¬¡æ•°
+    [SerializeField] private float bounceGravity; //åå¼¹é‡åŠ›
 
     [Header("Pierce info")]
-    [SerializeField] private int pierceCount; //´©Í¸´ÎÊı
-    [SerializeField] private float pierceGravity; //´©Í¸ÖØÁ¦
+    [SerializeField] private int pierceCount; //ç©¿é€æ¬¡æ•°
+    [SerializeField] private float pierceGravity; //ç©¿é€é‡åŠ›
 
     [Header("Sword info")]
     [SerializeField] private GameObject swordPrefab;
 
     [SerializeField] private Vector2 launchForce;
     [SerializeField] private float swordGravity;
-    [SerializeField] private float freezeTimeDuration; //¶³½áÊ±¼ä
+    [SerializeField] private float freezeTimeDuration; //å†»ç»“æ—¶é—´
 
     private Vector2 finaDir;
 
-    //Í¶ÖÀÅ×ÎïÏß
+    //æŠ•æ·æŠ›ç‰©çº¿
     [Header("Dots info")]
     [SerializeField] private int numberOfDots;
     [SerializeField] private float dotSpacing;
@@ -84,7 +84,13 @@ public class Sword_Skill : Skill
             }
         }
     }
-
+    public override void UseSkill()
+    {
+        base.UseSkill();
+        CreateSword();
+        AudioManager.instance.PlaySFX(18);
+        AudioManager.instance.PlaySFX(19);
+    }
     public void CreateSword()
     {
 
@@ -109,7 +115,7 @@ public class Sword_Skill : Skill
             swordController.SetupSword(finaDir, swordGravity, player , freezeTimeDuration);
         }
         player.AssignNewSword(newSword);
-        //È¡ÏûÍ¶ÖÀÅ×ÎïÏßµÄµã
+        //å–æ¶ˆæŠ•æ·æŠ›ç‰©çº¿çš„ç‚¹
         DotsActive(false);
     }
 
@@ -127,7 +133,7 @@ public class Sword_Skill : Skill
 
     public void DotsActive(bool _isActive)
     {
-        for (int i = 0; i < dots.Length; i++)//ÕâÀïÊÇ·ñ¿ÉÒÔÌæ»»³ÉnumberOfDots£¿
+        for (int i = 0; i < dots.Length; i++)//è¿™é‡Œæ˜¯å¦å¯ä»¥æ›¿æ¢æˆnumberOfDotsï¼Ÿ
         {
             if (dots[i] != null)
             {
@@ -149,7 +155,7 @@ public class Sword_Skill : Skill
 
     public Vector2 DotsPosition(float t)
     {
-        // ¼ÆËãÅ×ÎïÏßÎ»ÖÃ
+        // è®¡ç®—æŠ›ç‰©çº¿ä½ç½®
         Vector2 position = (Vector2)player.transform.position + new Vector2(
             AimDirection().normalized.x * launchForce.x, AimDirection().normalized.y * launchForce.y) * t
             + 0.5f * Physics2D.gravity * swordGravity * (t * t);

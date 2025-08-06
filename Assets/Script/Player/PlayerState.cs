@@ -47,4 +47,6 @@ public class PlayerState
     {
         triggerCalled = true;
     }
+
+    
 }

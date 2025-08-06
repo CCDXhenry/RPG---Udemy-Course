@@ -23,8 +23,12 @@ public class Checkpoint : MonoBehaviour ,ISaveManager
     private void TriggerCheckpoint(Player player)
     {
         isActive = true;
-        if(!anim.GetCurrentAnimatorStateInfo(0).IsName("fadeIn"))
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("fadeIn"))
+        {
+            AudioManager.instance.PlaySFX(5);
             anim.SetTrigger("fadeIn");
+        }
+            
         // 存储当前存档点位置
         PlayerManager.instance.currentCheckpointTransfrom = anim.gameObject.transform.position;
         // 保存游戏

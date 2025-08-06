@@ -7,7 +7,7 @@ public class BODGroundState : EnemyState
 
     protected Enemy_BringerOfDeath enemy;
     private Transform playerTrans;
-    private float minDistance = 3f; // Minimum distance to consider the player close enough to attack
+    protected float minDistance = 3f; // Minimum distance to consider the player close enough to attack
     protected float distanceToPlayer;
     protected float distanceToPlayerX;
     
@@ -48,8 +48,18 @@ public class BODGroundState : EnemyState
             //判断玩家是否在敌人的攻击范围内以及攻击冷却是否转好，切换到attackState攻击状态
             if (distanceToPlayer <= Mathf.Abs(enemy.attackDistance) && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
             {
-                stateMachine.ChangeState(enemy.attackState);
-                Debug.Log("玩家在敌人的攻击范围内以及攻击冷却转好，切换到attackState攻击状态");
+                bool isAttackBefore = true;//Random.Range(0, 2) == 0;
+                if (isAttackBefore)
+                {
+                    stateMachine.ChangeState(enemy.attackBeforeState);
+                    Debug.Log("玩家在敌人的攻击范围内以及攻击冷却转好，切换到attackBeforeState攻击状态");
+                }
+                else
+                {
+                    stateMachine.ChangeState(enemy.attackState);
+                    Debug.Log("玩家在敌人的攻击范围内以及攻击冷却转好，切换到attackState攻击状态");
+                }
+                
                 return;
             }
 
@@ -61,25 +71,44 @@ public class BODGroundState : EnemyState
                 return;
             }
 
-            //判断enemy的面朝方向
-            if (Mathf.Abs(distanceToPlayerX) > minDistance)
+        }
+    }
+
+    /// <summary>
+    /// 判断enemy与玩家的距离,大于最小距离就切换至移动状态
+    /// </summary>
+    /// <returns></returns>
+    protected virtual bool CheckMinDistance()
+    {
+        //判断enemy与玩家的距离,大于最小距离就切换至移动状态
+        if (Mathf.Abs(distanceToPlayerX) > minDistance)
+        {
+            if (distanceToPlayerX > 0 && enemy.facingDirection < 0)
             {
-                if (distanceToPlayerX > 0 && enemy.facingDirection < 0)
-                {
-                    enemy.Flip();
-                }
-                else if (distanceToPlayerX < 0 && enemy.facingDirection > 0)
-                {
-                    enemy.Flip();
-                }
-                if(animBoolName != "Move")
-                    enemy.stateMachine.ChangeState(enemy.moveState);
+                enemy.Flip();
             }
-            else
+            else if (distanceToPlayerX < 0 && enemy.facingDirection > 0)
             {
-                if(animBoolName != "Idle")
-                    enemy.stateMachine.ChangeState(enemy.idleState);
+                enemy.Flip();
+            }
+            if (animBoolName != "Move")
+            {
+                enemy.stateMachine.ChangeState(enemy.moveState);
+                Debug.Log("enemy与玩家的距离,大于最小距离,切换至Move状态");
+                return false;
             }
         }
+        else
+        {
+            if (animBoolName != "Idle")
+            {
+                enemy.stateMachine.ChangeState(enemy.idleState);
+                Debug.Log("enemy与玩家的距离,小于最小距离,切换至idle状态");
+                return false;
+            }
+
+        }
+
+        return true;
     }
 }

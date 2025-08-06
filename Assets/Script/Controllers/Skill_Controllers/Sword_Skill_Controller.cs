@@ -232,9 +232,11 @@ public class Sword_Skill_Controller : MonoBehaviour
 
     private void SwordSkillDamage(Enemy enemy)
     {
-        int SwordFacingDirection = ( transform.position.x > enemy.transform.position.x ) ? -1 : 1;
-        enemy.DamageEffect(Vector2.zero, SwordFacingDirection); // 如果碰撞物体是敌人，调用其伤害方法
+        //int SwordFacingDirection = ( transform.position.x > enemy.transform.position.x ) ? -1 : 1;
+        //enemy.DamageEffect(Vector2.zero, SwordFacingDirection); // 如果碰撞物体是敌人，调用其伤害方法
+        PlayerManager.instance.player.GetComponent<PlayerStats>().DoDamage(enemy.GetComponent<EnemyStats>());
         enemy.StartCoroutine("FreezeTimerFor", freezeTimeDuration); // 冻结敌人
+        AudioManager.instance.PlaySFX(22);
     }
 
     private void SetupBounceTargets(Collider2D collision)
@@ -291,6 +293,7 @@ public class Sword_Skill_Controller : MonoBehaviour
         //停止剑的旋转,将其附着到碰撞物体上
         anim.SetBool("Rotation", false);
         transform.parent = collision.transform;
+        AudioManager.instance.StopSFX(19);
     }
 }
 

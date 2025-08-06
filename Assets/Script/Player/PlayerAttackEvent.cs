@@ -23,6 +23,7 @@ public class PlayerAttackEvent : MonoBehaviour
                 //enemy.DamageEffect(Vector2.zero, player.facingDirection);
                 player.stats.DoDamage(enemy.stats, 0);
                 Inventory.instance.GetEqiupmentEffects(EquipmentType.Weapon)?.ExecuteItemEffect(enemy.transform);
+                AudioManager.instance.PlaySFX(22);
             }
                 
         }
@@ -30,6 +31,6 @@ public class PlayerAttackEvent : MonoBehaviour
 
     private void ThrowSword()
     {
-        SkillManager.instance.sword.CreateSword();
+        SkillManager.instance.sword.CanUseSkill(true);
     }
 }

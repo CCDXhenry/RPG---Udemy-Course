@@ -14,6 +14,7 @@ public class BODTeleportBeforeState : EnemyState
     {
         base.Enter();
         rb.velocity = Vector3.zero;
+        AudioManager.instance.PlaySFX(16);
     }
 
     public override void Exit()

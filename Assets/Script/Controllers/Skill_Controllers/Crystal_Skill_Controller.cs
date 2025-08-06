@@ -127,8 +127,11 @@ public class Crystal_Skill_Controller : MonoBehaviour
         {//确保爆炸动画只触发一次
             anim.SetTrigger("Explode");
             isExploded = true;
+            AudioManager.instance.StopSFX(25);
+            AudioManager.instance.PlaySFX(24);
+            
         }
-        
+
         if (canGrow)
         {
             currentCrystal.transform.localScale = Vector2.Lerp(currentCrystal.transform.localScale, Vector2.one * maxSize, growSpeed * Time.deltaTime);
@@ -144,7 +147,10 @@ public class Crystal_Skill_Controller : MonoBehaviour
             {
                 Vector2 knockbackVector = new Vector2(5, 0);
                 int damageFacingDirection = (currentCrystal.transform.position.x > enemy.transform.position.x) ? -1 : 1;
-                enemy.DamageEffect(knockbackVector, damageFacingDirection);
+                //enemy.DamageEffect(knockbackVector, damageFacingDirection);
+                var playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
+                int totalDamage = (playerStats.damage.GetValue() + playerStats.strength.GetValue()) * Random.Range(5, 8);
+                playerStats.DoDamage(enemy.GetComponent<EnemyStats>(), totalDamage, damageFacingDirection);
             }
         }
     }

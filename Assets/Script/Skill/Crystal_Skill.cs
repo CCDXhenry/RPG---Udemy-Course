@@ -45,7 +45,7 @@ public class Crystal_Skill : Skill
     public override void UseSkill()
     {
         base.UseSkill();
-
+        AudioManager.instance.PlaySFX(25);
 
         if (crystalTag == CrystalTags.Switchover)
         {

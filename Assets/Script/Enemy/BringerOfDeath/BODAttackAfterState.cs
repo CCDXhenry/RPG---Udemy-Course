@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BODAttackState : EnemyState
+public class BODAttackAfterState : EnemyState
 {
     private Enemy_BringerOfDeath enemy;
-    public BODAttackState(EnemyStateMachine stateMachine, Enemy enemyBase, string animBoolName, Enemy_BringerOfDeath enemy) : base(stateMachine, enemyBase, animBoolName)
+    public BODAttackAfterState(EnemyStateMachine stateMachine, Enemy enemyBase, string animBoolName, Enemy_BringerOfDeath enemy) : base(stateMachine, enemyBase, animBoolName)
     {
         this.enemy = enemy;
     }
@@ -34,7 +34,7 @@ public class BODAttackState : EnemyState
     public override void Update()
     {
         base.Update();
-        if(triggerCalled)
+        if (triggerCalled)
         {
             stateMachine.ChangeState(enemy.idleState);
         }

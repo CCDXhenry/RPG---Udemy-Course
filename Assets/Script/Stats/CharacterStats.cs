@@ -16,6 +16,7 @@ public enum StatType
 public class CharacterStats : MonoBehaviour
 {
     public Entity entity;
+    public EntityFX fx;
     [Header("Major stats")]
     [Tooltip("力量,影响物理攻击力")]
     public Stat strength;
@@ -36,15 +37,20 @@ public class CharacterStats : MonoBehaviour
     [Tooltip("闪避概率")]
     public Stat evasion;
 
+    public float damageMultiplier = 1f;//伤害倍率
+
     public int currentHealth;
     //血条值改变事件
     public System.Action onHealthChanged;
     public bool isDead { get; private set; }
     public bool isDeadZone;
+
+    private bool isInvincible;//无敌状态
     protected virtual void Start()
     {
         entity = GetComponent<Entity>();
         currentHealth = GetMaxHealthValue();
+        fx = GetComponent<EntityFX>();
     }
 
     public int GetMaxHealthValue()
@@ -62,8 +68,14 @@ public class CharacterStats : MonoBehaviour
     {
         // 计算目标的闪避率，决定是否命中
         bool isHitSuccessful = CheckEvasion(_targetStats);
-        if (!isHitSuccessful)
+        if (_targetStats.isInvincible)
         {
+            _targetStats.fx.CreatePopUpTextInfo("Invincible");
+            return;
+        }
+        if (!isHitSuccessful )
+        {
+            _targetStats.fx.CreatePopUpTextInfo("Evade");
             return;
         }
 
@@ -81,6 +93,7 @@ public class CharacterStats : MonoBehaviour
 
     private int GetTotalDamage(CharacterStats _targetStats, int _totalDamage)
     {
+
         int totalDamage = _totalDamage != 0 ? _totalDamage : damage.GetValue() + strength.GetValue();
         // 计算目标的护甲值，减少伤害
         int armorValue = _targetStats.armor.GetValue();
@@ -105,15 +118,44 @@ public class CharacterStats : MonoBehaviour
         return true;
     }
 
+    public void SetInvincible(bool _isInvincible)
+    {
+        isInvincible = _isInvincible;
+    }
+    public IEnumerator KeepInvincible(int invincibleFrames)
+    {
+        isInvincible = true;  // 开启无敌
+        Debug.Log("KeepInvincible-True");
+        // 等待指定帧数
+        for (int i = 0; i < invincibleFrames; i++)
+        {
+            yield return null; // 等待下一帧
+        }
+        Debug.Log("KeepInvincible-false");
+        isInvincible = false; // 关闭无敌
+    }
+
     /// <summary>
     /// 受到伤害并减少当前生命值。
     /// </summary>
     /// <param name="_damage">伤害值</param>
     public virtual void TakeDamage(int _damage)
     {
-        //Debug.Log($"{gameObject.name} took {_damage} damage. Current health: {currentHealth}");
-        currentHealth -= _damage;
-        onHealthChanged?.Invoke();// 通知UI更新生命值显示
+        if (_damage > 0)
+        {
+            //随机伤害倍率
+            damageMultiplier = Random.Range(0.9f, 1.2f);
+            _damage = (int)(_damage * damageMultiplier);
+
+            //Debug.Log($"{gameObject.name} took {_damage} damage. Current health: {currentHealth}");
+            currentHealth -= _damage;
+            //触发popupTextInfo
+
+            fx.CreatePopUpTextDamage(_damage, damageMultiplier);
+
+            onHealthChanged?.Invoke();// 通知UI更新生命值显示
+        }
+
         if (currentHealth <= 0)
         {
             Die();
