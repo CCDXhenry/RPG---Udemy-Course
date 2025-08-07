@@ -82,9 +82,12 @@ public class UI_InGame : MonoBehaviour
         else
         {
             if (!healthBarBoss.gameObject.activeSelf)
+            {
                 healthBarBoss.gameObject.SetActive(true);
-            enemyStats.onHealthChanged += () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
-            enemyStats.onHealthChanged.Invoke();
+                enemyStats.onHealthChanged += () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
+                enemyStats.onHealthChanged.Invoke();
+            }
+                
         }
     }
     private void GetBossInfo()
@@ -116,14 +119,17 @@ public class UI_InGame : MonoBehaviour
         if (healthPercentage > .8f)
         {
             healthStat.color = Color.green;
+            characterStats.entity.bossStage = 0;
         }
         else if (healthPercentage > .4f)
         {
             healthStat.color = Color.yellow;
+            characterStats.entity.bossStage = 1;
         }
         else
         {
             healthStat.color = Color.red;
+            characterStats.entity.bossStage = 2;
         }
     }
 

@@ -6,31 +6,60 @@ using UnityEngine;
 
 public enum BODTeleportEnum
 {
-    attack,
-    blackHand,
-    dodge
+    attack,//攻击 
+    blackHand,//黑手
+    swordLight//剑光
+}
+public enum BODAttackEnum
+{
+    attack,//攻击
+    attackBefore,//攻击前摇
 }
 public class Enemy_BringerOfDeath : Enemy
 {
+    
+    //获取boss血条UI
+    [SerializeField] private UI_Controller ui;
+    public GameObject blackHandPrefab;
+    public GameObject AttackFXPrefab;
+    
+
+    //teleport概率
+    [Header("Teleport Pro")]
+    public float[] teleportAttackPro = { 0.7f, 0.5f, 0.1f };
+
+    public float[] teleportBlackHandPro = { 0.3f, 0.3f, 0.4f };
+    public float[] teleportBlackHandMultiplePro = { 0.2f, 0.7f, 0.9f };//黑手连击概率
+    public int[] teleportBlackHandCounts = { 2, 3, 4 };
+    public int teleportBlackHandCount = 0;
+
+    public float[] teleportSwordLightPro = { 0, 0f, 0f };
+
+    [Header("Attack Pro")]
+    //attack概率
+    public float[] attackPro = { 0.8f, 0.3f, 0.1f };
+    public float[] attackBeforePro = { 0.2f, 0.7f, 0.9f };
+    public float[] attackAfterMultiplePro = { 0.2f, 0.7f, 0.9f };//攻击后连击概率
+    public int[] attackAfterCounts = { 2, 3, 4 };//攻击后连击判断次数
+    public int attackAfterCount = 0;
+    public float[] attackFxSpeed = { 4f, 8f, 12f };
+    public float[] attackFxPro = { 0f, 0.5f, 0.8f };
+
+    [Header("Battle Range Info")]
     [SerializeField] private BoxCollider2D battleRange;//触发竞技范围
     public bool isBattle;//是否为竞技状态
     public BattleRangeTrigger battleRangeTrigger;//活动场地范围
-
-    //获取boss血条UI
-    [SerializeField] private UI_Controller ui;
-    public string bossName;
     //获取活动范围
     [SerializeField] private PolygonCollider2D arenaCollider;
-
+    
+    //瞬移安全坐标
+    [Header("Teleport Info")]
+    [SerializeField] private Vector2 saveTransPosition;
     //瞬移偏移量
     [SerializeField] private float offsetDistanceX;
     [SerializeField] private float offsetDistanceY;
     //人物坐标距离地面高度
     [SerializeField] private float distanceGrounded = 2.5f;
-
-    //瞬移安全坐标
-    [Header("Teleport Info")]
-    [SerializeField] private Vector2 saveTransPosition;
 
     [Range(0, 1)]
     public float teleportProbability = 0.5f;//瞬移技能触发概率
@@ -40,6 +69,7 @@ public class Enemy_BringerOfDeath : Enemy
     private Collider2D lastHit;           // 记录上一次检测到的碰撞体
 
     public BODTeleportEnum teleportEnum;
+    public BODAttackEnum attackEnum;
     #region States
     public BODIdleState idleState { get; private set; }
     public BODMoveState moveState { get; private set; }
@@ -66,7 +96,7 @@ public class Enemy_BringerOfDeath : Enemy
         blackHandState = new BODBlackHandState(stateMachine, this, "BlackHand", this);
         deadState = new BODDeadState(stateMachine, this, "Die", this);
         stunnedState = new BODStunnedState(stateMachine, this, "Stunned", this);
-        attackBeforeState = new BODAttackBeforeState(stateMachine, this,"AttackBefore",this);
+        attackBeforeState = new BODAttackBeforeState(stateMachine, this, "AttackBefore", this);
         attackAfterState = new BODAttackAfterState(stateMachine, this, "AttackAfter", this);
 
         battleRangeTrigger.battleRangeonTriggerEnter += SetBattle;
@@ -87,6 +117,106 @@ public class Enemy_BringerOfDeath : Enemy
     }
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
+    #region Calculate Probability
+    /// <summary>
+    /// 获取瞬移技能触发类型
+    /// </summary>
+    /// <returns></returns>
+    public BODTeleportEnum TeleportProSelect()
+    {
+        float teleportAttack = teleportAttackPro[bossStage];
+        float teleportBlackHand = teleportBlackHandPro[bossStage];
+        float teleportSwordLight = teleportSwordLightPro[bossStage];
+
+        float teleportProbability = teleportAttack + teleportBlackHand + teleportSwordLight;
+
+        float rand = Random.Range(0f, teleportProbability);
+        Debug.Log("TeleportProSelect - "+ rand + " \n teleportAttack - " + teleportAttack + "\n teleportBlackHand -" + teleportBlackHand + "\n teleportAttack + teleportBlackHand = " + teleportAttack + teleportBlackHand);
+        if (rand < teleportAttack)
+        {
+            return BODTeleportEnum.attack;
+        }
+        else if (rand < teleportAttack + teleportBlackHand)
+        {
+
+            return BODTeleportEnum.blackHand;
+        }
+        else
+        {
+            return BODTeleportEnum.swordLight;
+        }
+    }
+
+    /// <summary>
+    /// 获取攻击技能触发类型
+    /// </summary>
+    /// <returns></returns>
+    public BODAttackEnum AttackProSelect()
+    {
+        float attack = attackPro[bossStage];
+        float attackBefore = attackBeforePro[bossStage];
+        float attackAllPro = attack + attackBefore;
+        float rand = Random.Range(0f, attackAllPro);
+        Debug.Log("AttackProSelect - " + rand);
+        if (rand < attack)
+        {
+            return BODAttackEnum.attack;
+        }
+        else
+        {
+            return BODAttackEnum.attackBefore;
+        }
+
+    }
+    /// <summary>
+    /// 获取攻击后连击次数
+    /// </summary>
+    /// <returns></returns>
+    public void AttackAfterCounts()
+    {
+        float attackAfterMultiple = attackAfterMultiplePro[bossStage];
+        float rand = Random.Range(0f, 1f);
+        int counts = 1;
+
+        for (int i = 0; i < attackAfterCounts[bossStage]; i++)
+        {
+            if (rand < attackAfterMultiple)
+            {
+                counts += 1;
+            }
+        }
+        attackAfterCount = counts;
+    }
+
+    public bool TriggerAttackFx()
+    {
+        var rand = Random.Range(0f, 1f);
+        if (rand < attackFxPro[bossStage])
+        {
+            return true;
+        }
+        return false;
+    }
+    /// <summary>
+    /// 获取黑手连击次数
+    /// </summary>
+    /// <returns></returns>
+    public void BlackHandCounts()
+    {
+        float teleportBlackHandMultiple = teleportBlackHandMultiplePro[bossStage];
+        float rand = Random.Range(0f, 1f);
+        int counts = 1;
+        for (int i = 0; i < teleportBlackHandCounts[bossStage]; i++)
+        {
+            if (rand < teleportBlackHandMultiple)
+            {
+                counts += 1;
+            }   
+        }
+        teleportBlackHandCount = counts;
+    }
+
+    #endregion
     private void SetBattle()
     {
         if (isBattle)
@@ -99,16 +229,14 @@ public class Enemy_BringerOfDeath : Enemy
             isBattle = true;
             AudioManager.instance.PlayBGM(1);
             ui.inGameUI.GetComponent<UI_InGame>().enemyStats = GetComponent<EnemyStats>();
-            ui.inGameUI.GetComponent<UI_InGame>().bossName.text = bossName;
+            ui.inGameUI.GetComponent<UI_InGame>().bossName.text = entityName;
         }
     }
 
 
-    private void OnDestroy()
-    {
-        battleRangeTrigger.battleRangeonTriggerEnter -= SetBattle;
-        battleRangeTrigger.battleRangeonTriggerExit -= SetBattle;
-    }
+
+    #region SaveTransPosition
+
 
     /// <summary>
     /// 检查周围是否有物体,防止瞬移卡在墙中
@@ -301,6 +429,7 @@ public class Enemy_BringerOfDeath : Enemy
             prevPoint = nextPoint;
         }
     }
+    #endregion
     public override bool CanBeStunned()
     {
         if (base.CanBeStunned())
@@ -314,5 +443,11 @@ public class Enemy_BringerOfDeath : Enemy
     {
         base.Die();
         stateMachine.ChangeState(deadState);
+    }
+
+    private void OnDestroy()
+    {
+        battleRangeTrigger.battleRangeonTriggerEnter -= SetBattle;
+        battleRangeTrigger.battleRangeonTriggerExit -= SetBattle;
     }
 }

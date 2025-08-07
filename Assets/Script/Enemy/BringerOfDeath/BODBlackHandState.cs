@@ -13,6 +13,14 @@ public class BODBlackHandState : EnemyState
     public override void Enter()
     {
         base.Enter();
+        if (enemy.transform.position.x > PlayerManager.instance.player.transform.position.x && enemy.facingDirection > 0)
+        {
+            enemy.Flip();
+        }
+        else if(enemy.transform.position.x < PlayerManager.instance.player.transform.position.x && enemy.facingDirection < 0)
+        {
+            enemy.Flip();
+        }
     }
 
     public override void Exit()
@@ -23,5 +31,9 @@ public class BODBlackHandState : EnemyState
     public override void Update()
     {
         base.Update();
+        if (triggerCalled)
+        {
+            stateMachine.ChangeState(enemy.idleState);
+        }
     }
 }

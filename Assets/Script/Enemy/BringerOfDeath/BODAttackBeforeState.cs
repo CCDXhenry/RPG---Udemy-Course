@@ -13,7 +13,8 @@ public class BODAttackBeforeState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        stateTime = Random.Range(0f, 1f);//前摇时间
+        stateTime = Random.Range(0f, 0.5f);//前摇时间
+        enemy.AttackAfterCounts();
     }
 
     public override void Exit()
@@ -24,7 +25,10 @@ public class BODAttackBeforeState : EnemyState
     public override void Update()
     {
         base.Update();
-        if (stateTime < 0)
+        if (!triggerCalled)
+        {
+            stateTime += Time.deltaTime;
+        }else if (stateTime < 0)
         {
             stateMachine.ChangeState(enemy.attackAfterState);
         }

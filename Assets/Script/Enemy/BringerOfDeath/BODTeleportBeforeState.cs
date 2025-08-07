@@ -15,6 +15,10 @@ public class BODTeleportBeforeState : EnemyState
         base.Enter();
         rb.velocity = Vector3.zero;
         AudioManager.instance.PlaySFX(16);
+        if (enemy.teleportEnum == BODTeleportEnum.blackHand)
+        {
+            enemy.BlackHandCounts();
+        }
     }
 
     public override void Exit()
@@ -28,18 +32,28 @@ public class BODTeleportBeforeState : EnemyState
 
         if (triggerCalled)
         {
+            var player = PlayerManager.instance.player;
             //触发瞬移攻击模式,随机移动到角色位置前后
             if (enemy.teleportEnum == BODTeleportEnum.attack)
             {
-                var player = PlayerManager.instance.player;
-                float teleportDir = Random.Range(0,2) == 0 ? -1 : 1;
+                float teleportDir = Random.Range(0, 2) == 0 ? -1 : 1;
                 float offsetX = Random.Range(1f, 3f);
                 //计算瞬移后的安全坐标
                 var teleportTrans = enemy.SafeTeleport(player.transform.position + new Vector3(player.facingDirection * teleportDir * offsetX, 0));
                 enemy.transform.position = teleportTrans;
-                stateMachine.ChangeState(enemy.teleportAfterState);
+
             }
+            //触发瞬移模式,远离角色位置
+            if (enemy.teleportEnum == BODTeleportEnum.blackHand)
+            {
+                float teleportDir = Random.Range(0, 2) == 0 ? -1 : 1;
+                float offsetX = Random.Range(8f, 12f);
+                //计算瞬移后的安全坐标
+                var teleportTrans = enemy.SafeTeleport(player.transform.position + new Vector3(player.facingDirection * teleportDir * offsetX, 0));
+                enemy.transform.position = teleportTrans;
+            }
+            stateMachine.ChangeState(enemy.teleportAfterState);
         }
-        
+
     }
 }

@@ -40,6 +40,7 @@ public class CharacterStats : MonoBehaviour
     public float damageMultiplier = 1f;//伤害倍率
 
     public int currentHealth;
+    public int oweHealth;//因装备而导致的负数血量,以防穿戴装备回血
     //血条值改变事件
     public System.Action onHealthChanged;
     public bool isDead { get; private set; }
@@ -73,7 +74,7 @@ public class CharacterStats : MonoBehaviour
             _targetStats.fx.CreatePopUpTextInfo("Invincible");
             return;
         }
-        if (!isHitSuccessful )
+        if (!isHitSuccessful)
         {
             _targetStats.fx.CreatePopUpTextInfo("Evade");
             return;

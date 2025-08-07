@@ -36,10 +36,10 @@ public class BODGroundState : EnemyState
             distanceToPlayer = Vector2.Distance(playerTrans.position, enemy.transform.position);
             distanceToPlayerX = playerTrans.position.x - enemy.transform.position.x;
 
-            //如果距离大于触发范围的一半，就切换到teleportState瞬移状态
+            //如果距离大于触发范围的一半，切换到teleportState瞬移状态
             if (distanceToPlayer > enemy.battleRangeTrigger.boxCr.size.x * 0.5f)
             {
-                enemy.teleportEnum = BODTeleportEnum.attack;
+                enemy.teleportEnum = enemy.TeleportProSelect();//随机选择瞬移类型
                 stateMachine.ChangeState(enemy.teleportBeforeState);
                 Debug.Log("距离大于触发范围的一半，切换到teleportState瞬移状态");
                 return;
@@ -48,8 +48,8 @@ public class BODGroundState : EnemyState
             //判断玩家是否在敌人的攻击范围内以及攻击冷却是否转好，切换到attackState攻击状态
             if (distanceToPlayer <= Mathf.Abs(enemy.attackDistance) && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
             {
-                bool isAttackBefore = true;//Random.Range(0, 2) == 0;
-                if (isAttackBefore)
+                enemy.attackEnum = enemy.AttackProSelect();//随机选择攻击类型
+                if (enemy.attackEnum == BODAttackEnum.attackBefore)
                 {
                     stateMachine.ChangeState(enemy.attackBeforeState);
                     Debug.Log("玩家在敌人的攻击范围内以及攻击冷却转好，切换到attackBeforeState攻击状态");
@@ -66,6 +66,7 @@ public class BODGroundState : EnemyState
             //判断是否触碰到地面或者墙壁,切换到teleportState瞬移状态
             if (!enemy.IsGroundedDetected() || enemy.IsWallDetected())
             {
+                enemy.teleportEnum = enemy.TeleportProSelect();//随机选择瞬移类型
                 stateMachine.ChangeState(enemy.teleportBeforeState);
                 Debug.Log("判断是否触碰到地面或者墙壁,切换到teleportState瞬移状态");
                 return;

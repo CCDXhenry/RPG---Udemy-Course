@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyStats))]
 public class Enemy : Entity
 {
+    
     [Header("Stunned Info")]
     public float stunDuration;
     public Vector2 stunDirection;

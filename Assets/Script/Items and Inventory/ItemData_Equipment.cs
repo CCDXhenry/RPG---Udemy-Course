@@ -57,11 +57,19 @@ public class ItemData_Equipment : ItemData
         playerStats.damage.AddModifier(damage);
         playerStats.maxHealth.AddModifier(maxHealth);
         playerStats.evasion.AddModifier(evasion);
-        if(maxHealth != 0)
+        if (maxHealth != 0 || vitality != 0)
         {
+            playerStats.currentHealth += maxHealth + vitality * 5 - playerStats.oweHealth;
+            playerStats.oweHealth = 0;
+            if (playerStats.currentHealth <= 0)
+            {
+                playerStats.oweHealth += playerStats.currentHealth;
+                playerStats.currentHealth = 1;
+            }
             playerStats.onHealthChanged?.Invoke();// 通知UI更新生命值显示
         }
     }
+
 
     public void RemoveModifiers()
     {
@@ -74,12 +82,18 @@ public class ItemData_Equipment : ItemData
         playerStats.damage.RemoveModifier(damage);
         playerStats.maxHealth.RemoveModifier(maxHealth);
         playerStats.evasion.RemoveModifier(evasion);
-        if (maxHealth != 0)
+        if (maxHealth != 0 || vitality != 0)
         {
+            playerStats.currentHealth -= maxHealth + vitality * 5 - playerStats.oweHealth;
+            playerStats.oweHealth = 0;
+            if (playerStats.currentHealth <= 0)
+            {
+                playerStats.oweHealth += playerStats.currentHealth;
+                playerStats.currentHealth = 1;
+            }
             playerStats.onHealthChanged?.Invoke();// 通知UI更新生命值显示
         }
     }
-
     public void ExecuteItemEffect(Transform enemyTransform)
     {
         foreach (ItemEffect effect in itemEffects)
@@ -95,7 +109,7 @@ public class ItemData_Equipment : ItemData
         AddStatDescription(agility, "Agility");
         AddStatDescription(intelligence, "Intelligence");
         AddStatDescription(vitality, "Vitality");
-        
+
         AddStatDescription(damage, "Damage");
         AddStatDescription(maxHealth, "Max Health");
         AddStatDescription(armor, "Armor");

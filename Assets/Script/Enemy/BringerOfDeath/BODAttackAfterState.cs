@@ -23,6 +23,9 @@ public class BODAttackAfterState : EnemyState
         {
             enemy.Flip();
         }
+        float offsetX = Random.Range(2f, 5f);
+        float offsetY = Random.Range(2f, 4f);
+        rb.velocity = new Vector2(enemy.facingDirection * offsetX, offsetY);
     }
 
     public override void Exit()

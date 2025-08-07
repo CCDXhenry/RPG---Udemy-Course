@@ -30,6 +30,10 @@ public class BODTeleportAfterState : EnemyState
             {
                 stateMachine.ChangeState(enemy.idleState);
             }
+            if(enemy.teleportEnum == BODTeleportEnum.blackHand)
+            {
+                stateMachine.ChangeState(enemy.blackHandState);
+            }
         }
 
     }

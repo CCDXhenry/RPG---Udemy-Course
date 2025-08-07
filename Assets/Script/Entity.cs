@@ -11,6 +11,7 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+    public string entityName;
     #region Components
     public Animator anim { get; private set; } // 动画控制器，用于处理实体的动画状态
     public Rigidbody2D rb { get; private set; } // 刚体2D组件，用于处理物理运动和碰撞
@@ -47,6 +48,8 @@ public class Entity : MonoBehaviour
     public Vector2 knockbackVector;
     public float knockbackDuration;
     public bool isKnocked;
+
+    public int bossStage = 0;//boss阶段
 
     // Start is called before the first frame update
     protected virtual void Awake()

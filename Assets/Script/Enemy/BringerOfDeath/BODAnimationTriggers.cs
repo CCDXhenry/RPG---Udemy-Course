@@ -14,9 +14,23 @@ public class BODAnimationTriggers : MonoBehaviour
     {
         enemy.AnimationTrigger();
     }
+    private void FinisBlackHand()
+    {
+        enemy.teleportBlackHandCount--;
+        if (enemy.teleportBlackHandCount <= 0)
+        {
+            enemy.blackHandState.AnimationFinishTrigger();
+        }
+    }
     private void FinishAttackAfter()
     {
-        enemy.attackAfterState.AnimationFinishTrigger();
+        enemy.attackAfterCount--;
+        enemy.stateMachine.currentState.Enter();
+        if (enemy.attackAfterCount <= 0)
+        {
+            enemy.attackAfterState.AnimationFinishTrigger();
+        }
+
     }
 
     private void FinishAttack()
@@ -45,6 +59,26 @@ public class BODAnimationTriggers : MonoBehaviour
         CloseCounterAttackWindow();
         AudioManager.instance.PlaySFX(1);
 
+        //触发攻击特效
+        if (enemy.TriggerAttackFx())
+        {
+            float offsetX = -2.11f;
+            float offsetY = 0.32f;
+            if (enemy.facingDirection > 0)
+            {
+                offsetX = 2.126f;
+            }
+            GameObject attackFx = Instantiate(enemy.AttackFXPrefab, enemy.transform.position + new Vector3(offsetX, offsetY), Quaternion.identity);
+            if (enemy.facingDirection > 0)
+            {
+                attackFx.transform.Rotate(0, 180, 0);
+
+            }
+            attackFx.GetComponent<BODAttackFX>().rb.velocity = Vector3.right * enemy.facingDirection * enemy.attackFxSpeed[enemy.bossStage];
+        }
+        
+
+
         Collider2D[] colliders = Physics2D.OverlapCircleAll(enemy.attackCheck.position, enemy.attackCheckRadius);
         foreach (var hit in colliders)
         {
@@ -56,6 +90,16 @@ public class BODAnimationTriggers : MonoBehaviour
             }
         }
     }
+    private void CreateBlackHand()
+    {
+        //创建黑手
+        AudioManager.instance.PlaySFX(16);
+        float offsetX = Random.Range(-1f, 1f);
+        float offsetY = 0.8f;
+        var playerTransPosition = PlayerManager.instance.player.transform.position;
+        GameObject blackHand = Instantiate(enemy.blackHandPrefab, playerTransPosition + new Vector3(offsetX, offsetY), Quaternion.identity);
+
+    }
 
     private void OpenCounterAttackWindow()
     {
@@ -63,5 +107,5 @@ public class BODAnimationTriggers : MonoBehaviour
     }
     private void CloseCounterAttackWindow() => enemy.CloseCounterAttackWindow();
 
-    
+
 }

@@ -83,6 +83,11 @@ public class ThunderStrike_Controller : MonoBehaviour
     //删除自身
     public void DestroySelf()
     {
+        var parentObject = transform.parent.gameObject;
         Destroy(gameObject);
+        if (parentObject != null)
+        {
+            Destroy(parentObject);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Script.Player
@@ -23,6 +23,7 @@ namespace Assets.Script.Player
             stateTime = flyTime; // 初始化状态时间为飞行时间
 
             player.isBusy = true; // 设置玩家为忙碌状态
+            player.stats.SetInvincible(true);
         }
 
         public override void Exit()
@@ -30,6 +31,7 @@ namespace Assets.Script.Player
             base.Exit();
             rb.gravityScale = originalGravity;
             player.isBusy = false; // 退出状态时将玩家设置为非忙碌状态
+            player.stats.SetInvincible(false);
         }
 
         public override void Update()

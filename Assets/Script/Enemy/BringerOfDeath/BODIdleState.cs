@@ -33,7 +33,7 @@ public class BODIdleState : BODGroundState
                 if (triggerTeleport)
                 {
                     //触发瞬移技能
-                    enemy.teleportEnum = BODTeleportEnum.attack;
+                    enemy.teleportEnum = enemy.TeleportProSelect();
                     stateMachine.ChangeState(enemy.teleportBeforeState);
                     Debug.Log("判断缓冲时间,尝试触发瞬移技能,触发成功");
                     return;

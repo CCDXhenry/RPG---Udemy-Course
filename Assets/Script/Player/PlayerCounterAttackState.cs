@@ -32,13 +32,13 @@ public class PlayerCounterAttackState : PlayerState
             {
                 if (hit.GetComponent<Enemy>().CanBeStunned())
                 {
-                    stateTime = 10f;
+                    stateTime = 10f;//弹反动作持续时间,防止招架动作结束改变状态
                     player.anim.SetBool("SuccessfulCounterAttack", true);
                     AudioManager.instance.PlaySFX(0);
                 }
             }
         }
-        if (stateTime < 0 || triggerCalled)
+        if (stateTime < 0 || triggerCalled)//弹反动作结束
         {
             stateMachine.ChangeState(player.idleState);
         }
