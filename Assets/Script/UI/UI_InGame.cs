@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
+    
 
     [SerializeField] private Slider healthBarPlayer;
     [SerializeField] private Slider healthBarBoss;
@@ -28,6 +29,8 @@ public class UI_InGame : MonoBehaviour
     [SerializeField] private int soulFlowSpeed;// 灵魂改变时动态速度
     private float currentSoulsValue;// 目标灵魂值
 
+    public Image HurtOverlay;// 受伤时显示的图片
+
     private void Start()
     {
 
@@ -36,6 +39,8 @@ public class UI_InGame : MonoBehaviour
 
         //注册血条更新事件
         playerStats.onHealthChanged += () => Update_Health_UI(playerStats, healthBarPlayer, healthStatPlayer);
+        //注册受伤事件
+        playerStats.triggerHurtOverlay += () => HurtOverlay.GetComponent<UI_HurtOverlay>().ShowHurtEffect();
         //enemyStats.onHealthChanged += () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
 
         //初始化血条
@@ -155,7 +160,8 @@ public class UI_InGame : MonoBehaviour
         skillManager.sword.OnSkillUiUpdated -= () => SetCooldownOf(swordImage);
         skillManager.crystal.OnSkillUiUpdated -= () => SetCooldownOf(crystalImage);
         playerStats.onHealthChanged -= () => Update_Health_UI(playerStats, healthBarPlayer, healthStatPlayer);
-        if(enemyStats != null)
+        playerStats.triggerHurtOverlay -= () => HurtOverlay.GetComponent<UI_HurtOverlay>().ShowHurtEffect();
+        if (enemyStats != null)
             enemyStats.onHealthChanged -= () => Update_Health_UI(enemyStats, healthBarBoss, healthStatBoss);
     }
 }

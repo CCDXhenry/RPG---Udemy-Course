@@ -17,12 +17,12 @@ public enum BODAttackEnum
 }
 public class Enemy_BringerOfDeath : Enemy
 {
-    
+
     //获取boss血条UI
     [SerializeField] private UI_Controller ui;
     public GameObject blackHandPrefab;
     public GameObject AttackFXPrefab;
-    
+
 
     //teleport概率
     [Header("Teleport Pro")]
@@ -51,7 +51,7 @@ public class Enemy_BringerOfDeath : Enemy
     public BattleRangeTrigger battleRangeTrigger;//活动场地范围
     //获取活动范围
     [SerializeField] private PolygonCollider2D arenaCollider;
-    
+
     //瞬移安全坐标
     [Header("Teleport Info")]
     [SerializeField] private Vector2 saveTransPosition;
@@ -99,8 +99,8 @@ public class Enemy_BringerOfDeath : Enemy
         attackBeforeState = new BODAttackBeforeState(stateMachine, this, "AttackBefore", this);
         attackAfterState = new BODAttackAfterState(stateMachine, this, "AttackAfter", this);
 
-        battleRangeTrigger.battleRangeonTriggerEnter += SetBattle;
-        battleRangeTrigger.battleRangeonTriggerExit += SetBattle;
+        battleRangeTrigger.battleRangeonTriggerEnter += EnterBattle;
+        battleRangeTrigger.battleRangeonTriggerExit += ExitBattle;
         SetDefaultFacingDirection();
     }
 
@@ -131,7 +131,7 @@ public class Enemy_BringerOfDeath : Enemy
         float teleportProbability = teleportAttack + teleportBlackHand + teleportSwordLight;
 
         float rand = Random.Range(0f, teleportProbability);
-        Debug.Log("TeleportProSelect - "+ rand + " \n teleportAttack - " + teleportAttack + "\n teleportBlackHand -" + teleportBlackHand + "\n teleportAttack + teleportBlackHand = " + teleportAttack + teleportBlackHand);
+        Debug.Log("TeleportProSelect - " + rand + " \n teleportAttack - " + teleportAttack + "\n teleportBlackHand -" + teleportBlackHand + "\n teleportAttack + teleportBlackHand = " + teleportAttack + teleportBlackHand);
         if (rand < teleportAttack)
         {
             return BODTeleportEnum.attack;
@@ -211,25 +211,29 @@ public class Enemy_BringerOfDeath : Enemy
             if (rand < teleportBlackHandMultiple)
             {
                 counts += 1;
-            }   
+            }
         }
         teleportBlackHandCount = counts;
     }
 
     #endregion
-    private void SetBattle()
+    private void EnterBattle()
     {
-        if (isBattle)
-        {
-            isBattle = false;
-            AudioManager.instance.PlayBGM(0);
-        }
-        else
+        if (!isBattle)
         {
             isBattle = true;
             AudioManager.instance.PlayBGM(1);
             ui.inGameUI.GetComponent<UI_InGame>().enemyStats = GetComponent<EnemyStats>();
             ui.inGameUI.GetComponent<UI_InGame>().bossName.text = entityName;
+        }
+    }
+
+    private void ExitBattle()
+    {
+        if (isBattle)
+        {
+            isBattle = false;
+            AudioManager.instance.PlayBGM(0);
         }
     }
 
@@ -447,7 +451,7 @@ public class Enemy_BringerOfDeath : Enemy
 
     private void OnDestroy()
     {
-        battleRangeTrigger.battleRangeonTriggerEnter -= SetBattle;
-        battleRangeTrigger.battleRangeonTriggerExit -= SetBattle;
+        battleRangeTrigger.battleRangeonTriggerEnter -= EnterBattle;
+        battleRangeTrigger.battleRangeonTriggerExit -= ExitBattle;
     }
 }

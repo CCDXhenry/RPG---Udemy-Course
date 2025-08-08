@@ -1,8 +1,6 @@
 using Assets.Script.Player;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 public class Player : Entity
@@ -19,6 +17,9 @@ public class Player : Entity
     [Header("Attack info")]
     public int comboCounts = 0;
     [SerializeField] public Vector2[] attackMovement;
+
+
+    public event System.Action ResetMultistageJumpCounter;//重置连跳计数
 
     //人物忙碌状态
     private bool _isBusy;
@@ -100,6 +101,7 @@ public class Player : Entity
         {
             SkillManager.instance.crystal.CanUseSkill(true);
         }
+        CheckForMultistageJumpInput();
     }
 
     public void AssignNewSword(GameObject _newSword)
@@ -138,6 +140,13 @@ public class Player : Entity
             stateMachine.ChangeState(dashState);
         }
     }
+    public void CheckForMultistageJumpInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !isBusy && !IsGroundedDetected())
+        {
+            skill.multistageJump.CanUseSkill(true);
+        }
+    }
 
     //人物震动协程
     public IEnumerator Vibrate(float duration)
@@ -160,7 +169,7 @@ public class Player : Entity
             yield return null;
         }
 
-        rb.MovePosition (new Vector3(originalPositionX, rb.position.y)); // 精确还原
+        rb.MovePosition(new Vector3(originalPositionX, rb.position.y)); // 精确还原
         yield return new WaitForSeconds(0.5f);
         isVibrating = false; // 重置震动状态
     }
@@ -180,11 +189,12 @@ public class Player : Entity
     }
     public override bool IsGroundedDetected()
     {
-        bool isGrounded =  base.IsGroundedDetected();
+        bool isGrounded = base.IsGroundedDetected();
         if (isGrounded)
         {
             var tileCenter = GetTileCenterTrans();
             lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y, transform.position.z);
+            ResetMultistageJumpCounter?.Invoke();//重置连跳计数
         }
         return isGrounded;
 

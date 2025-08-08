@@ -43,6 +43,7 @@ public class CharacterStats : MonoBehaviour
     public int oweHealth;//因装备而导致的负数血量,以防穿戴装备回血
     //血条值改变事件
     public System.Action onHealthChanged;
+    public System.Action triggerHurtOverlay;
     public bool isDead { get; private set; }
     public bool isDeadZone;
 
@@ -153,6 +154,19 @@ public class CharacterStats : MonoBehaviour
             //触发popupTextInfo
 
             fx.CreatePopUpTextDamage(_damage, damageMultiplier);
+
+            if (entity.entityType == Entitytype.Player)
+            {
+                if (damageMultiplier > 1.1f)
+                {
+                    fx.ScreenShake(fx.shakeDamage[1]);
+                }
+                else
+                {
+                    fx.ScreenShake(fx.shakeDamage[0]);
+                }
+                triggerHurtOverlay?.Invoke();// 通知UI显示受伤效果
+            }
 
             onHealthChanged?.Invoke();// 通知UI更新生命值显示
         }

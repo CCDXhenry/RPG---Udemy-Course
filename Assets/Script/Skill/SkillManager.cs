@@ -16,6 +16,7 @@ public class SkillManager : MonoBehaviour
 
     public Crystal_Skill crystal { get; private set; }
     public CounterAttack_Skill counterAttack { get; private set; }
+    public MultistageJump_Skill multistageJump { get; private set; }
 
     #endregion
     private void Awake()
@@ -39,5 +40,6 @@ public class SkillManager : MonoBehaviour
         blackhole = GetComponent<Blackhole_Skill>();
         crystal = GetComponent<Crystal_Skill>();
         counterAttack = GetComponent<CounterAttack_Skill>();
+        multistageJump = GetComponent<MultistageJump_Skill>();
     }
 }

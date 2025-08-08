@@ -24,7 +24,7 @@ public class PlayerAirState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (player.IsGroundedDetected())
+        if (player.IsGroundedDetected() || rb.velocity.y == 0)
         {
             stateMachine.ChangeState(player.idleState);
         }

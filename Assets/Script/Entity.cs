@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+public enum Entitytype
+{
+    Player,
+    Enemy,
+    Boss
+}
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(EntityFX))]
 [RequireComponent(typeof(CapsuleCollider2D))]
 
-
 public class Entity : MonoBehaviour
 {
     public string entityName;
+    public Entitytype entityType;
     #region Components
     public Animator anim { get; private set; } // 动画控制器，用于处理实体的动画状态
     public Rigidbody2D rb { get; private set; } // 刚体2D组件，用于处理物理运动和碰撞
@@ -87,6 +92,7 @@ public class Entity : MonoBehaviour
         rb.velocity = new Vector2(_knockbackDirection.x * facingDirection, _knockbackDirection.y);
         yield return new WaitForSeconds(knockbackDuration);
         isKnocked = false;
+        rb.velocity = Vector2.zero;
     }
 
 
