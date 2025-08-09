@@ -20,7 +20,7 @@ public class GameData
     public SerializableDictionary<string, float> volumeSlider;//音量
     public GameData()
     {
-        this.currentSouls = 0;
+        this.currentSouls = 1000;
         this.lostSouls = 0;
         this.lostSoulsTransposition = new Vector3();
         this.inventory = new SerializableDictionary<string, int>();
@@ -29,6 +29,8 @@ public class GameData
         this.checkpoints = new SerializableDictionary<string, bool>();
         this.currentCheckpointTransfrom = new Vector3();
         this.volumeSlider = new SerializableDictionary<string, float>();
+
+        this.skillTree["Dash"] = true;
     }
 
     /// <summary>

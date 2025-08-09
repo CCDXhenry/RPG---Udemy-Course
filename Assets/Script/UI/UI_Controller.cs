@@ -28,9 +28,8 @@ public class UI_Controller : MonoBehaviour
     private void Start()
     {
 
-        isUIOpen = false;
-        SwitchTo(inGameUI);
-        
+        SwitchInGameUI();
+
         itemToolTip.gameObject.SetActive(false);
         skillToolTip.gameObject.SetActive(false);
     }
@@ -143,5 +142,10 @@ public class UI_Controller : MonoBehaviour
     public void RestartGameButton()
     {
         GameManage.instance.RestartScene();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

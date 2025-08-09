@@ -13,6 +13,7 @@ public class PlayerDashState : PlayerState
         base.Enter();
         stateTime = player.dashDuration;
         player.skill.dash.CanUseDashClone();
+        player.skill.dash.CanUseDashCloneMore();
         player.stats.SetInvincible(true);
     }
 

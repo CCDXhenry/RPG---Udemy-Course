@@ -17,6 +17,7 @@ public class Entity : MonoBehaviour
 {
     public string entityName;
     public Entitytype entityType;
+    public float leaveGroundTime;
     #region Components
     public Animator anim { get; private set; } // 动画控制器，用于处理实体的动画状态
     public Rigidbody2D rb { get; private set; } // 刚体2D组件，用于处理物理运动和碰撞
@@ -74,6 +75,7 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        leaveGroundTime += Time.deltaTime;
     }
 
     public virtual void DamageEffect(Vector2 _knockbackVector, int facingDirection)
@@ -105,7 +107,12 @@ public class Entity : MonoBehaviour
 
     public virtual bool IsGroundedDetected()
     {
-        return Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        bool isGrounded = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        if (isGrounded)
+        {
+            leaveGroundTime = 0;//重置离开地面时间
+        }
+        return isGrounded;
     }
 
 
@@ -157,6 +164,15 @@ public class Entity : MonoBehaviour
         }
     }
 
+    public virtual void OnChangeBossStage(int _bossStage)
+    {
+
+    }
+
+    public virtual void CreateHitFX(Transform _target)
+    {
+
+    }
     public virtual void Die()
     {
 

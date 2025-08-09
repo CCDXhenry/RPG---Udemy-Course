@@ -33,7 +33,7 @@ public class Dash_Skill : Skill
     protected override void Start()
     {
         base.Start();
-        
+
     }
     public override void CheckUnlock()
     {
@@ -83,7 +83,9 @@ public class Dash_Skill : Skill
     {
         if (dashCloneUnlocked)
         {
-            player.skill.clone.CreateClone(player.transform, Vector3.zero);
+            float xOffset = Random.Range(-1f, 1f);
+
+            player.skill.clone.CreateClone(player.transform, new Vector3(xOffset,0), false);
             return true;
         }
         else
@@ -96,6 +98,8 @@ public class Dash_Skill : Skill
     {
         if (dashCloneMorelocked)
         {
+            float xOffset = Random.Range(-1f, 1f);
+            player.skill.clone.CreateClone(player.transform, new Vector3(xOffset, 0), true);
             return true;
         }
         else
@@ -105,6 +109,7 @@ public class Dash_Skill : Skill
     }
     public override bool CanUseSkill(bool _isUseSkill)
     {
+        CheckUnlock();
         if (!CanUseDash())
         {
             return false;

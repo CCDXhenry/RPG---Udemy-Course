@@ -44,6 +44,24 @@ public class Enemy_Skeleton : Enemy
         return false;
     }
 
+    protected override void EnterBattle()
+    {
+        base.EnterBattle();
+        if (!isBattle)
+        {
+            isBattle = true;
+        }
+    }
+
+    protected override void ExitBattle()
+    {
+        base.ExitBattle();
+        if (isBattle)
+        {
+            isBattle = false;
+        }
+    }
+
     public override void Die()
     {
         base.Die();

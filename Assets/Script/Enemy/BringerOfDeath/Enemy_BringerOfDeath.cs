@@ -24,6 +24,13 @@ public class Enemy_BringerOfDeath : Enemy
     public GameObject AttackFXPrefab;
 
 
+    [Header("Particle System Info")]
+    public ParticleSystem darkAuraSmoke;
+    public float[] rateOverTimeArray = { 1, 3, 7 };
+
+    [Header("Audio Info")]
+    public int[] bossStageBGMArray = { 1, 2, 3 };
+    public int bossDiedBGM = 5;
     //teleport概率
     [Header("Teleport Pro")]
     public float[] teleportAttackPro = { 0.7f, 0.5f, 0.1f };
@@ -45,10 +52,7 @@ public class Enemy_BringerOfDeath : Enemy
     public float[] attackFxSpeed = { 4f, 8f, 12f };
     public float[] attackFxPro = { 0f, 0.5f, 0.8f };
 
-    [Header("Battle Range Info")]
-    [SerializeField] private BoxCollider2D battleRange;//触发竞技范围
-    public bool isBattle;//是否为竞技状态
-    public BattleRangeTrigger battleRangeTrigger;//活动场地范围
+    
     //获取活动范围
     [SerializeField] private PolygonCollider2D arenaCollider;
 
@@ -99,8 +103,6 @@ public class Enemy_BringerOfDeath : Enemy
         attackBeforeState = new BODAttackBeforeState(stateMachine, this, "AttackBefore", this);
         attackAfterState = new BODAttackAfterState(stateMachine, this, "AttackAfter", this);
 
-        battleRangeTrigger.battleRangeonTriggerEnter += EnterBattle;
-        battleRangeTrigger.battleRangeonTriggerExit += ExitBattle;
         SetDefaultFacingDirection();
     }
 
@@ -116,6 +118,19 @@ public class Enemy_BringerOfDeath : Enemy
         base.Update();
     }
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+
+    public override void OnChangeBossStage(int _bossStage)
+    {
+        base.OnChangeBossStage(_bossStage);
+        if (bossStage != _bossStage)
+        {
+            bossStage = _bossStage;
+            var emission = darkAuraSmoke.emission;
+            emission.rateOverTime = rateOverTimeArray[bossStage];
+            AudioManager.instance.PlayBGM(bossStageBGMArray[bossStage]);
+        }
+        
+    }
 
     #region Calculate Probability
     /// <summary>
@@ -217,19 +232,21 @@ public class Enemy_BringerOfDeath : Enemy
     }
 
     #endregion
-    private void EnterBattle()
+    protected override void EnterBattle()
     {
+        base.EnterBattle();
         if (!isBattle)
         {
             isBattle = true;
-            AudioManager.instance.PlayBGM(1);
+            AudioManager.instance.PlayBGM(bossStageBGMArray[bossStage]);
             ui.inGameUI.GetComponent<UI_InGame>().enemyStats = GetComponent<EnemyStats>();
             ui.inGameUI.GetComponent<UI_InGame>().bossName.text = entityName;
         }
     }
 
-    private void ExitBattle()
+    protected override void ExitBattle()
     {
+        base.ExitBattle();
         if (isBattle)
         {
             isBattle = false;
@@ -447,11 +464,8 @@ public class Enemy_BringerOfDeath : Enemy
     {
         base.Die();
         stateMachine.ChangeState(deadState);
+        AudioManager.instance.PlayBGM(bossDiedBGM);
+        darkAuraSmoke.gameObject.SetActive(false);
     }
-
-    private void OnDestroy()
-    {
-        battleRangeTrigger.battleRangeonTriggerEnter -= EnterBattle;
-        battleRangeTrigger.battleRangeonTriggerExit -= ExitBattle;
-    }
+    
 }

@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Player : Entity
 {
+    [SerializeField] private GameObject hitFXPrefab;
     public Tilemap groundTilemap; // 绑定地面的Tilemap
     [Header("Move info")]
     [SerializeField] public float moveSpeed = 5f;
@@ -95,15 +96,41 @@ public class Player : Entity
         {
             return;
         }
+
         stateMachine.currentState.Update();
+
+        //冲刺技能
         CheckForDashInput();
+
+        //水晶技能
         if (Input.GetKeyDown(KeyCode.F))
         {
             SkillManager.instance.crystal.CanUseSkill(true);
         }
+
+        // 连跳技能
         CheckForMultistageJumpInput();
+
+        // 黑洞技能
+        if (Input.GetKeyDown(KeyCode.R) && SkillManager.instance.blackhole.CanUseSkill(false))
+        {
+            stateMachine.ChangeState(blackholeState);
+        }
     }
 
+    public override void CreateHitFX(Transform _target)
+    {
+        float zRotation = Random.Range(-60, 60);
+        float xPosition = Random.Range(-0.5f, 0.5f);
+        float yPosition = Random.Range(-0.5f, 0.5f);
+
+        var hitPosition = new Vector3 (_target.position.x + xPosition, transform.position.y + yPosition);
+        GameObject newHitFX = Instantiate(hitFXPrefab, hitPosition, Quaternion.identity);
+        if (facingDirection < 0)
+        {
+            newHitFX.transform.Rotate(0, 180, zRotation);
+        }
+    }
     public void AssignNewSword(GameObject _newSword)
     {
         sword = _newSword;
@@ -151,7 +178,7 @@ public class Player : Entity
     //人物震动协程
     public IEnumerator Vibrate(float duration)
     {
-        if (isVibrating) yield break;
+        if (isVibrating || !IsGroundedDetected()) yield break;
         isVibrating = true;
         stateMachine.ChangeState(idleState);
         StartCoroutine(BusyFor(duration));
@@ -193,7 +220,7 @@ public class Player : Entity
         if (isGrounded)
         {
             var tileCenter = GetTileCenterTrans();
-            lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y, transform.position.z);
+            lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y, transform.position.z);//保存上一次检测到的地面位置
             ResetMultistageJumpCounter?.Invoke();//重置连跳计数
         }
         return isGrounded;

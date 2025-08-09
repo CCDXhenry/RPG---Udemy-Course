@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
+
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Inventory : MonoBehaviour, ISaveManager
 {
@@ -34,6 +37,7 @@ public class Inventory : MonoBehaviour, ISaveManager
     [Header("Data Base")]
     [SerializeField] private List<InventoryItem> inventoryDataBase;
     [SerializeField] private List<ItemData_Equipment> equipmentDataBase;
+    [SerializeField] private List<ItemData> itemDataBase;
     private void Awake()
     {
         if (instance == null)
@@ -330,7 +334,7 @@ public class Inventory : MonoBehaviour, ISaveManager
     {
         foreach (KeyValuePair<string, int> pair in _gameData.inventory)
         {
-            foreach (var item in GetItemDataBase())
+            foreach (var item in itemDataBase)
             {
                 if (item != null && item.itemId == pair.Key)
                 {
@@ -342,7 +346,7 @@ public class Inventory : MonoBehaviour, ISaveManager
         }
         foreach (string loadItemId in _gameData.equimentId)
         {
-            foreach (var item in GetItemDataBase())
+            foreach (var item in itemDataBase)
             {
                 if (item != null && item.itemId == loadItemId)
                 {
@@ -373,6 +377,10 @@ public class Inventory : MonoBehaviour, ISaveManager
         }
     }
 
+#if UNITY_EDITOR
+    // 从资源文件中获取物品数据
+    [ContextMenu("Fill up item data base")]
+    private void FillUpItemDataBase() => itemDataBase = new List<ItemData>(GetItemDataBase());
     private List<ItemData> GetItemDataBase()
     {
         List<ItemData> itemDataBase = new List<ItemData>();
@@ -385,4 +393,5 @@ public class Inventory : MonoBehaviour, ISaveManager
         }
         return itemDataBase;
     }
+#endif
 }

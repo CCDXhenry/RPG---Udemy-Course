@@ -28,9 +28,17 @@ public class PlayerCounterAttackState : PlayerState
         Collider2D[] colliders = Physics2D.OverlapCircleAll(player.attackCheck.position, player.attackCheckRadius);
         foreach (var hit in colliders)
         {
-            if (hit.GetComponent<Enemy>() != null)
+            if (hit.TryGetComponent(out Enemy enemy))
             {
-                if (hit.GetComponent<Enemy>().CanBeStunned())
+                //判断是否面向玩家
+                bool facingOpposite = enemy.facingDirection != player.facingDirection;
+
+                //判断是否在攻击范围内
+                float dist = Vector2.Distance(player.attackCheck.position, enemy.attackCheck.position);
+                float combinedRange = player.attackCheckRadius + enemy.attackCheckRadius;
+                bool attackRangeOverlap = dist <= combinedRange;
+
+                if (enemy.CanBeStunned() && facingOpposite && attackRangeOverlap)
                 {
                     stateTime = 10f;//弹反动作持续时间,防止招架动作结束改变状态
                     player.anim.SetBool("SuccessfulCounterAttack", true);

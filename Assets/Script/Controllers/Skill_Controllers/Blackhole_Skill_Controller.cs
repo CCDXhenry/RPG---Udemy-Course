@@ -9,13 +9,13 @@ public class Blackhole_Skill_Controller : MonoBehaviour
     private float shrinkSpeed;
     private float maxSize;
 
-    public bool isBlackholeActive = false; // ºÚ¶´¼¼ÄÜÊÇ·ñ¼¤»î,Ìá¹©ÆäËû½Å±¾²éÑ¯
+    public bool isBlackholeActive = false; // é»‘æ´æŠ€èƒ½æ˜¯å¦æ¿€æ´»,æä¾›å…¶ä»–è„šæœ¬æŸ¥è¯¢
     private bool canGrow;
     private bool canShrink;
 
     private List<Transform> targets = new List<Transform>();
-    private float blackholeDuration; // ºÚ¶´³ÖĞøÊ±¼ä
-    private float blackholeTimer; // ºÚ¶´¼ÆÊ±Æ÷
+    private float blackholeDuration; // é»‘æ´æŒç»­æ—¶é—´
+    private float blackholeTimer; // é»‘æ´è®¡æ—¶å™¨
 
     [Header("Key Settings")]
     public List<KeyCode> hotKeyList = new List<KeyCode>();
@@ -24,46 +24,46 @@ public class Blackhole_Skill_Controller : MonoBehaviour
     private List<GameObject> createdHotKeys = new List<GameObject>();
 
     [Header("Clone Settings")]
-    [SerializeField] private float cloneInterval; // ¿ËÂ¡¼ä¸ôÊ±¼ä
-    private float cloneTimer; // ¿ËÂ¡¼ÆÊ±Æ÷
-    [SerializeField] private float cloneCounts; // ¿ËÂ¡ÊıÁ¿
+    [SerializeField] private float cloneInterval; // å…‹éš†é—´éš”æ—¶é—´
+    private float cloneTimer; // å…‹éš†è®¡æ—¶å™¨
+    [SerializeField] private float cloneCounts; // å…‹éš†æ•°é‡
     private float remainingCloneCount;
     private bool isTransparable;
 
 
     public void SetupBlackhole(float _maxSize, float _growSpeed, float _shrinkSpeed, float _cloneCounts, float _blackholeDuration)
     {
-        maxSize = _maxSize; // ÉèÖÃºÚ¶´×î´ó³ß´ç
-        growSpeed = _growSpeed; // ÉèÖÃºÚ¶´Ôö³¤ËÙ¶È
-        shrinkSpeed = _shrinkSpeed;// ÉèÖÃºÚ¶´ËõĞ¡ËÙ¶È
-        cloneCounts = _cloneCounts; // ³õÊ¼»¯¿ËÂ¡¼ÆÊı
-        blackholeDuration = _blackholeDuration; // ÉèÖÃºÚ¶´³ÖĞøÊ±¼ä
+        maxSize = _maxSize; // è®¾ç½®é»‘æ´æœ€å¤§å°ºå¯¸
+        growSpeed = _growSpeed; // è®¾ç½®é»‘æ´å¢é•¿é€Ÿåº¦
+        shrinkSpeed = _shrinkSpeed;// è®¾ç½®é»‘æ´ç¼©å°é€Ÿåº¦
+        cloneCounts = _cloneCounts; // åˆå§‹åŒ–å…‹éš†è®¡æ•°
+        blackholeDuration = _blackholeDuration; // è®¾ç½®é»‘æ´æŒç»­æ—¶é—´
 
-        isBlackholeActive = true; // ¼¤»îºÚ¶´¼¼ÄÜ
-        blackholeTimer = blackholeDuration; // ³õÊ¼»¯ºÚ¶´¼ÆÊ±Æ÷
-        canGrow = true; // ³õÊ¼×´Ì¬ÔÊĞíÔö³¤
-        canShrink = false; // ³õÊ¼×´Ì¬²»ÔÊĞíËõĞ¡
-        cloneTimer = 0f; // ³õÊ¼»¯¿ËÂ¡¼ÆÊ±Æ÷
-        //cloneInterval = blackholeDuration / cloneCounts; // ÉèÖÃ¿ËÂ¡¼ä¸ôÊ±¼ä()
+        isBlackholeActive = true; // æ¿€æ´»é»‘æ´æŠ€èƒ½
+        blackholeTimer = blackholeDuration; // åˆå§‹åŒ–é»‘æ´è®¡æ—¶å™¨
+        canGrow = true; // åˆå§‹çŠ¶æ€å…è®¸å¢é•¿
+        canShrink = false; // åˆå§‹çŠ¶æ€ä¸å…è®¸ç¼©å°
+        cloneTimer = 0f; // åˆå§‹åŒ–å…‹éš†è®¡æ—¶å™¨
+        //cloneInterval = blackholeDuration / cloneCounts; // è®¾ç½®å…‹éš†é—´éš”æ—¶é—´()
         cloneInterval = 0;
-        remainingCloneCount = cloneCounts; // ³õÊ¼»¯Ê£Óà¿ËÂ¡¼ÆÊı
+        remainingCloneCount = cloneCounts; // åˆå§‹åŒ–å‰©ä½™å…‹éš†è®¡æ•°
         isTransparable = false;
     }
 
     private void Update()
     {
-        blackholeTimer -= Time.deltaTime; // ¼õÉÙºÚ¶´¼ÆÊ±Æ÷
+        blackholeTimer -= Time.deltaTime; // å‡å°‘é»‘æ´è®¡æ—¶å™¨
         if (blackholeTimer <= 0f)
         {
-            canShrink = true; // µ±ºÚ¶´¼ÆÊ±Æ÷½áÊøÊ±£¬ÔÊĞíËõĞ¡
+            canShrink = true; // å½“é»‘æ´è®¡æ—¶å™¨ç»“æŸæ—¶ï¼Œå…è®¸ç¼©å°
         }
 
         if (canGrow)
         {
             transform.localScale = Vector2.Lerp(transform.localScale, new Vector2(maxSize, maxSize), growSpeed * Time.deltaTime);
-            if (transform.localScale.x >= maxSize - 0.1f) // µ±´ïµ½×î´ó³ß´çÊ±£¬¿ªÊ¼¿ËÂ¡
+            if (transform.localScale.x >= maxSize - 0.1f) // å½“è¾¾åˆ°æœ€å¤§å°ºå¯¸æ—¶ï¼Œå¼€å§‹å…‹éš†
             {
-                canGrow = false; // Í£Ö¹Ôö³¤
+                canGrow = false; // åœæ­¢å¢é•¿
             }
         }
         if (!canGrow && !canShrink)
@@ -73,46 +73,46 @@ public class Blackhole_Skill_Controller : MonoBehaviour
             {
                 if (!isTransparable)
                 {
-                    PlayerManager.instance.player.MakeTransparent(true); // Ê¹Íæ¼ÒÍ¸Ã÷
+                    PlayerManager.instance.player.MakeTransparent(true); // ä½¿ç©å®¶é€æ˜
                     isTransparable = true;
 
-                    //¸ù¾İÒÑ°´ÈÈ¼üÊıÁ¿Ôö¼Ó¿ËÂ¡ÊıÁ¿
+                    //æ ¹æ®å·²æŒ‰çƒ­é”®æ•°é‡å¢åŠ å…‹éš†æ•°é‡
                     if (targets.Count > 0)
                     {
-                        remainingCloneCount += targets.Count; // Ôö¼Ó¿ËÂ¡¼ÆÊı
-                        cloneInterval = Mathf.Min(blackholeTimer / remainingCloneCount, 0.5f); // ÖØĞÂ¼ÆËã¿ËÂ¡¼ä¸ôÊ±¼ä
+                        remainingCloneCount += targets.Count; // å¢åŠ å…‹éš†è®¡æ•°
+                        cloneInterval = Mathf.Min(blackholeTimer / remainingCloneCount, 0.5f); // é‡æ–°è®¡ç®—å…‹éš†é—´éš”æ—¶é—´
                     }
-                    DestroyHotKeys(); // Ïú»ÙËùÓĞÈÈ¼ü
+                    DestroyHotKeys(); // é”€æ¯æ‰€æœ‰çƒ­é”®
                 }
                 cloneTimer -= Time.deltaTime;
                 if (cloneTimer <= 0)
                 {
-                    remainingCloneCount--; // ¼õÉÙ¿ËÂ¡¼ÆÊı
-                    int targetIndex = Random.Range(0, targets.Count); // Ëæ»úÑ¡ÔñÒ»¸öÄ¿±ê
-                                                                      //xOffsetËæ»úÎª-2»ò2£¬ÓÃÓÚ¿ØÖÆ¿ËÂ¡ÎïµÄÎ»ÖÃÆ«ÒÆ
+                    remainingCloneCount--; // å‡å°‘å…‹éš†è®¡æ•°
+                    int targetIndex = Random.Range(0, targets.Count); // éšæœºé€‰æ‹©ä¸€ä¸ªç›®æ ‡
+                                                                      //xOffsetéšæœºä¸º-2æˆ–2ï¼Œç”¨äºæ§åˆ¶å…‹éš†ç‰©çš„ä½ç½®åç§»
                     float xOffset = Random.Range(0, 2) == 0 ? -1f : 1f;
-                    SkillManager.instance.clone.CreateClone(targets[targetIndex], new Vector3(xOffset, 0));
+                    SkillManager.instance.clone.CreateClone(targets[targetIndex], new Vector3(xOffset, 0), false);
 
                     cloneTimer = cloneInterval;
                 }
             }
             if (targets.Count <= 0 || remainingCloneCount <= 0)
             {
-                DestroyHotKeys(); // Ïú»ÙËùÓĞÈÈ¼ü
-                canShrink = true; // Èç¹ûÃ»ÓĞÄ¿±ê»ò¿ËÂ¡¼ÆÊıÓÃÍê£¬ÔÊĞíËõĞ¡
+                DestroyHotKeys(); // é”€æ¯æ‰€æœ‰çƒ­é”®
+                canShrink = true; // å¦‚æœæ²¡æœ‰ç›®æ ‡æˆ–å…‹éš†è®¡æ•°ç”¨å®Œï¼Œå…è®¸ç¼©å°
             }
         }
 
         if (canShrink)
         {
-            //DestroyHotKeys(); // Ïú»ÙËùÓĞÈÈ¼ü
+            //DestroyHotKeys(); // é”€æ¯æ‰€æœ‰çƒ­é”®
             transform.localScale = Vector2.Lerp(transform.localScale, new Vector2(-1, -1), shrinkSpeed * Time.deltaTime);
             if (transform.localScale.x <= 0.5f)
             {
                 FinishBlackholeAbility();
-                isBlackholeActive = false; // ÉèÖÃºÚ¶´¼¼ÄÜÎª·Ç¼¤»î×´Ì¬
+                isBlackholeActive = false; // è®¾ç½®é»‘æ´æŠ€èƒ½ä¸ºéæ¿€æ´»çŠ¶æ€
 
-                Destroy(gameObject); // Ïú»ÙºÚ¶´¼¼ÄÜ¶ÔÏó
+                Destroy(gameObject); // é”€æ¯é»‘æ´æŠ€èƒ½å¯¹è±¡
             }
         }
     }
@@ -128,9 +128,9 @@ public class Blackhole_Skill_Controller : MonoBehaviour
         {
             foreach (GameObject hotKey in createdHotKeys)
             {
-                Destroy(hotKey); // Ïú»ÙËùÓĞÒÑ´´½¨µÄÈÈ¼ü
+                Destroy(hotKey); // é”€æ¯æ‰€æœ‰å·²åˆ›å»ºçš„çƒ­é”®
             }
-            createdHotKeys.Clear(); // Çå¿ÕÒÑ´´½¨ÈÈ¼üÁĞ±í
+            createdHotKeys.Clear(); // æ¸…ç©ºå·²åˆ›å»ºçƒ­é”®åˆ—è¡¨
         }
     }
 
@@ -138,10 +138,10 @@ public class Blackhole_Skill_Controller : MonoBehaviour
     {
         if (collision.TryGetComponent(out Enemy enemy))
         {
-            enemy.FreezeTimer(true); // ¶³½áµĞÈË
+            enemy.FreezeTimer(true); // å†»ç»“æ•Œäºº
             if (!canGrow)
-                return; // Èç¹ûºÚ¶´Ã»ÓĞ´¦ÓÚÔö³¤×´Ì¬£¬Ôò²»´´½¨ÈÈ¼ü
-            // ¼ì²éÊÇ·ñÓĞ¿ÉÓÃµÄÈÈ¼ü
+                return; // å¦‚æœé»‘æ´æ²¡æœ‰å¤„äºå¢é•¿çŠ¶æ€ï¼Œåˆ™ä¸åˆ›å»ºçƒ­é”®
+            // æ£€æŸ¥æ˜¯å¦æœ‰å¯ç”¨çš„çƒ­é”®
             bool flowControl = CreateAndAssignHotKey(collision);
             if (!flowControl)
             {
@@ -150,25 +150,25 @@ public class Blackhole_Skill_Controller : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) => collision.GetComponent<Enemy>()?.FreezeTimer(false); // ½â³ıµĞÈË¶³½á×´Ì¬
+    private void OnTriggerExit2D(Collider2D collision) => collision.GetComponent<Enemy>()?.FreezeTimer(false); // è§£é™¤æ•Œäººå†»ç»“çŠ¶æ€
 
     private bool CreateAndAssignHotKey(Collider2D collision)
     {
         if (hotKeyList.Count <= 0)
         {
             Debug.LogWarning("No hotkeys available to assign!");
-            return false; // Èç¹ûÃ»ÓĞ¿ÉÓÃµÄÈÈ¼ü£¬Ö±½Ó·µ»Ø
+            return false; // å¦‚æœæ²¡æœ‰å¯ç”¨çš„çƒ­é”®ï¼Œç›´æ¥è¿”å›
         }
-        //´´½¨ÈÈ¼ü
+        //åˆ›å»ºçƒ­é”®
         GameObject newHotKey = Instantiate(hotKeyPrefab, collision.transform.position + new Vector3(0, 1.5f), Quaternion.identity);
-        createdHotKeys.Add(newHotKey); // ½«ĞÂ´´½¨µÄÈÈ¼üÌí¼Óµ½ÒÑ´´½¨ÈÈ¼üÁĞ±íÖĞ
-        KeyCode choosenKey = hotKeyList[Random.Range(0, hotKeyList.Count)]; // Ëæ»úÑ¡ÔñÒ»¸öÈÈ¼ü
-        hotKeyList.Remove(choosenKey); // ´ÓÁĞ±íÖĞÒÆ³ıÒÑÊ¹ÓÃµÄÈÈ¼ü
+        createdHotKeys.Add(newHotKey); // å°†æ–°åˆ›å»ºçš„çƒ­é”®æ·»åŠ åˆ°å·²åˆ›å»ºçƒ­é”®åˆ—è¡¨ä¸­
+        KeyCode choosenKey = hotKeyList[Random.Range(0, hotKeyList.Count)]; // éšæœºé€‰æ‹©ä¸€ä¸ªçƒ­é”®
+        hotKeyList.Remove(choosenKey); // ä»åˆ—è¡¨ä¸­ç§»é™¤å·²ä½¿ç”¨çš„çƒ­é”®
 
         Blackhole_HotKey_Controller hotKeyController = newHotKey.GetComponent<Blackhole_HotKey_Controller>();
         if (hotKeyController != null)
         {
-            hotKeyController.SetupHotKey(choosenKey, collision.transform, this); // ÉèÖÃÈÈ¼ü
+            hotKeyController.SetupHotKey(choosenKey, collision.transform, this); // è®¾ç½®çƒ­é”®
         }
         else
         {

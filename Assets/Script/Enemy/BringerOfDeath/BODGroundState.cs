@@ -46,7 +46,7 @@ public class BODGroundState : EnemyState
             }
 
             //判断玩家是否在敌人的攻击范围内以及攻击冷却是否转好，切换到attackState攻击状态
-            if (distanceToPlayer <= Mathf.Abs(enemy.attackDistance) && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
+            if (enemy.CanAttackToPlayer() && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
             {
                 enemy.attackEnum = enemy.AttackProSelect();//随机选择攻击类型
                 if (enemy.attackEnum == BODAttackEnum.attackBefore)

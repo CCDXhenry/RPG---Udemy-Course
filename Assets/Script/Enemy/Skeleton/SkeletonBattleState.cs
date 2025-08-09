@@ -42,10 +42,10 @@ public class SkeletonBattleState : EnemyState
             enemy.SetVelocity(enemy.moveSpeed * moveDir, rb.velocity.y);
         }
         
-        if (enemy.IsPlayerDetected())
+        if (enemy.isBattle)
         {
-            stateTime = enemy.battleTime;
-            if (enemy.IsPlayerDetected().distance < enemy.attackDistance)
+            
+            if (enemy.CanAttackToPlayer())
             {
                 if (CanAttack())
                 {
@@ -54,7 +54,12 @@ public class SkeletonBattleState : EnemyState
                     
             }
         }
-        else if (stateTime < 0 || Vector2.Distance(player.transform.position, enemy.transform.position) > 10)
+        else
+        {
+            stateMachine.ChangeState(enemy.idleState);
+        }
+
+        if (enemy.IsWallDetected() || !enemy.IsGroundedDetected() || !enemy.IsSameGround())
         {
             stateMachine.ChangeState(enemy.idleState);
         }

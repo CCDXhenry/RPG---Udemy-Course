@@ -24,6 +24,7 @@ public class PlayerAttackEvent : MonoBehaviour
                 player.stats.DoDamage(enemy.stats, 0);
                 Inventory.instance.GetEqiupmentEffects(EquipmentType.Weapon)?.ExecuteItemEffect(enemy.transform);
                 AudioManager.instance.PlaySFX(22);
+                player.CreateHitFX(enemy.transform);
             }
                 
         }

@@ -124,17 +124,17 @@ public class UI_InGame : MonoBehaviour
         if (healthPercentage > .8f)
         {
             healthStat.color = Color.green;
-            characterStats.entity.bossStage = 0;
+            characterStats.entity.OnChangeBossStage(0);
         }
         else if (healthPercentage > .4f)
         {
             healthStat.color = Color.yellow;
-            characterStats.entity.bossStage = 1;
+            characterStats.entity.OnChangeBossStage(1);
         }
         else
         {
             healthStat.color = Color.red;
-            characterStats.entity.bossStage = 2;
+            characterStats.entity.OnChangeBossStage(2);
         }
     }
 
