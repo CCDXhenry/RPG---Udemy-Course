@@ -98,7 +98,10 @@ public class Player : Entity
         }
 
         stateMachine.currentState.Update();
-
+        if (isBusy)
+        {
+            return;
+        }
         //冲刺技能
         CheckForDashInput();
 
@@ -124,7 +127,7 @@ public class Player : Entity
         float xPosition = Random.Range(-0.5f, 0.5f);
         float yPosition = Random.Range(-0.5f, 0.5f);
 
-        var hitPosition = new Vector3 (_target.position.x + xPosition, transform.position.y + yPosition);
+        var hitPosition = new Vector3(_target.position.x + xPosition, transform.position.y + yPosition);
         GameObject newHitFX = Instantiate(hitFXPrefab, hitPosition, Quaternion.identity);
         if (facingDirection < 0)
         {
@@ -138,7 +141,12 @@ public class Player : Entity
 
     public void CatchSword()
     {
-        stateMachine.ChangeState(catchSwordState);
+        //防止打断黑洞技能
+        if (stateMachine.currentState.animBoolName != "Jump" && !isBusy)
+        {
+            stateMachine.ChangeState(catchSwordState);
+        }
+        AudioManager.instance.StopSFX(19);
         Destroy(sword);
     }
 
@@ -220,7 +228,8 @@ public class Player : Entity
         if (isGrounded)
         {
             var tileCenter = GetTileCenterTrans();
-            lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y, transform.position.z);//保存上一次检测到的地面位置
+            float yOffset = -0.17f;//人物模型与死亡模型的y轴偏移量
+            lastGroundCheckTransposition = new Vector3(tileCenter.x, transform.position.y + yOffset, transform.position.z);//保存上一次检测到的地面位置
             ResetMultistageJumpCounter?.Invoke();//重置连跳计数
         }
         return isGrounded;

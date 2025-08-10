@@ -7801,6 +7801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Player
   entityType: 0
+  leaveGroundTime: 0
   attackCheck: {fileID: 321857168}
   attackCheckRadius: 0.86
   groundLayer:
@@ -29195,67 +29196,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1800949679}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &894765153
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1996331125}
-    m_Modifications:
-    - target: {fileID: 1253527473852651811, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: checkpointId
-      value: 80540e42-0918-4c1a-91d5-640bb850c48d
-      objectReference: {fileID: 0}
-    - target: {fileID: 1944895845644259988, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_Name
-      value: Checkpoint (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 34.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
 --- !u!1 &904715367
 GameObject:
   m_ObjectHideFlags: 0
@@ -36227,11 +36167,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!4 &1106078430 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
-  m_PrefabInstance: {fileID: 894765153}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1112369781
 GameObject:
   m_ObjectHideFlags: 0
@@ -36515,6 +36450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: BringerOfDeath
   entityType: 2
+  leaveGroundTime: 0
   attackCheck: {fileID: 734713822}
   attackCheckRadius: 2.47
   groundLayer:
@@ -49908,7 +49844,7 @@ MonoBehaviour:
   dashCloneUnlocked: 0
   dashCloneUnlockButton: {fileID: 450928332}
   dashCloneMorelocked: 0
-  DashCloneMoreUnlockButton: {fileID: 1320379685}
+  dashCloneMoreUnlockButton: {fileID: 1320379685}
 --- !u!114 &1665581457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50001,7 +49937,7 @@ MonoBehaviour:
   maxSize: 10
   growSpeed: 3
   shrinkSpeed: 5
-  cloneCounts: 2
+  cloneCounts: 5
   blackholeDuration: 3
   blackholeController: {fileID: 0}
 --- !u!114 &1665581462
@@ -54074,7 +54010,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1106078430}
   - {fileID: 517251045}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -61297,6 +61232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Skeleton
   entityType: 1
+  leaveGroundTime: 0
   attackCheck: {fileID: 7856898236337273115}
   attackCheckRadius: 0.82
   groundLayer:
@@ -61387,7 +61323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06
+      value: -0.06
       objectReference: {fileID: 0}
     - target: {fileID: 7675410229661917761, guid: 1296354110d8917438e91dcc32264cfd, type: 3}
       propertyPath: m_LocalPosition.z

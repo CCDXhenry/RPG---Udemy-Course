@@ -21,12 +21,15 @@ public class PlayerGroundedState : PlayerState
     public override void Update()
     {
         base.Update();
-        
+        if (player.isBusy)
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Mouse1) && HasNoSword() && SkillManager.instance.sword.CanUseSkill(false))
         {
             stateMachine.ChangeState(player.aimSwordState);
         }
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && SkillManager.instance.counterAttack.CanUseSkill(true))
+        if (Input.GetKeyDown(KeyCode.C) && SkillManager.instance.counterAttack.CanUseSkill(true))
         {
             stateMachine.ChangeState(player.counterAttackState);
         }

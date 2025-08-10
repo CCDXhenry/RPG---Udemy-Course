@@ -13,16 +13,16 @@ public class BODAttackState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        var playerTrans = PlayerManager.instance.player.transform;
-        float distanceToPlayerX = playerTrans.position.x - enemy.transform.position.x;
-        if (distanceToPlayerX > 0 && enemy.facingDirection < 0)
-        {
-            enemy.Flip();
-        }
-        else if (distanceToPlayerX < 0 && enemy.facingDirection > 0)
-        {
-            enemy.Flip();
-        }
+        //var playerTrans = PlayerManager.instance.player.transform;
+        //float distanceToPlayerX = playerTrans.position.x - enemy.transform.position.x;
+        //if (distanceToPlayerX > 0 && enemy.facingDirection < 0)
+        //{
+        //    enemy.Flip();
+        //}
+        //else if (distanceToPlayerX < 0 && enemy.facingDirection > 0)
+        //{
+        //    enemy.Flip();
+        //}
     }
 
     public override void Exit()

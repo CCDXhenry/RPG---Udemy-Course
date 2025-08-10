@@ -56,7 +56,7 @@ public class Sword_Skill_Controller : MonoBehaviour
     }
 
     //设置剑的初始方向、重力和玩家
-    public void SetupSword(Vector2 _dir, float _gravity, Player _player , float _freezeTimeDuration)
+    public void SetupSword(Vector2 _dir, float _gravity, Player _player, float _freezeTimeDuration)
     {
         freezeTimeDuration = _freezeTimeDuration; // 设置冻结时间
         player = _player;
@@ -65,7 +65,7 @@ public class Sword_Skill_Controller : MonoBehaviour
         if (pierceCount <= 0)
             anim.SetBool("Rotation", true);
 
-        spinMoveDistance = Mathf.Clamp(rb.velocity.x,-1,1);// 限制旋转移动距离在 -1 到 1 之间
+        spinMoveDistance = Mathf.Clamp(rb.velocity.x, -1, 1);// 限制旋转移动距离在 -1 到 1 之间
 
         Invoke("DestroyMe", 7f); // 7秒后销毁剑对象
     }
@@ -82,7 +82,7 @@ public class Sword_Skill_Controller : MonoBehaviour
         pierceCount = _pierceCount;
 
     }
-    public void SetupSpin(bool _isSpinning, float _maxTravelDistance, float _spinDuration ,float _hitCooldown)
+    public void SetupSpin(bool _isSpinning, float _maxTravelDistance, float _spinDuration, float _hitCooldown)
     {
         isSpinning = _isSpinning;
         maxTravelDistance = _maxTravelDistance;
@@ -136,8 +136,8 @@ public class Sword_Skill_Controller : MonoBehaviour
             }
             if (wasStopped)
             {
-                
-                transform.position =   Vector2.MoveTowards(
+
+                transform.position = Vector2.MoveTowards(
                     transform.position,
                     new Vector3(spinMoveDistance + transform.position.x, transform.position.y),
                     spinMoveSpeed * Time.deltaTime); // 让剑在水平方向上移动
@@ -160,7 +160,7 @@ public class Sword_Skill_Controller : MonoBehaviour
                         if (enemy.TryGetComponent(out Enemy enemy1))
                         {
                             SwordSkillDamage(enemy1); // 如果碰撞物体是敌人，调用其伤害方法
-                        }                     
+                        }
                     }
                     hitTimer = hitCooldown; // 重置命中冷却时间
                 }
@@ -189,7 +189,7 @@ public class Sword_Skill_Controller : MonoBehaviour
             // 如果剑接近当前目标，切换到下一个目标
             if (Vector2.Distance(transform.position, enemyTargets[currentTargetIndex].position) < 0.1f)
             {
-                if(enemyTargets[currentTargetIndex].TryGetComponent(out Enemy enemy))
+                if (enemyTargets[currentTargetIndex].TryGetComponent(out Enemy enemy))
                 {
                     SwordSkillDamage(enemy);
                 }
@@ -274,10 +274,16 @@ public class Sword_Skill_Controller : MonoBehaviour
             return;
         }
 
+        // 如果在旋转状态，且碰撞物体不是敌人，则不停止剑的运动
+        if (isSpinning && collision.gameObject.layer != LayerMask.NameToLayer("Enemy")) 
+        {
+            return;
+        }
+        
         canRotate = false;// 禁止剑的前进
         cr.enabled = false;// 禁用碰撞器，防止后续碰撞
         rb.isKinematic = true;// 设置刚体为运动学模式，停止物理模拟
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;// 冻结剑的旋转和移动
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;// 冻结剑的旋转和移动}
 
         //如果是反弹状态，且敌人目标列表不为空，则不附着到碰撞物体上
         if (isBouncing && enemyTargets.Count > 0)

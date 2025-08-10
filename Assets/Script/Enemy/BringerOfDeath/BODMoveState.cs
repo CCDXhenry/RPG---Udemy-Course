@@ -11,6 +11,14 @@ public class BODMoveState : BODGroundState
     public override void Enter()
     {
         base.Enter();
+        if (!CheckMinDistance())
+        {
+            var rand = Random.Range(0f, 1f);
+            if (rand <= 0.5f)
+            {
+                enemy.Flip();
+            }
+        }
 
     }
 
@@ -26,10 +34,7 @@ public class BODMoveState : BODGroundState
         //enemy移动
         if (enemy.isBattle)
         {
-            if (!CheckMinDistance())
-            {
-                return;
-            }
+            CheckMinDistance();
             enemy.rb.velocity = new Vector3(enemy.moveSpeed * enemy.facingDirection, enemy.rb.velocity.y);
         }
 

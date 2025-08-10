@@ -13,10 +13,10 @@ public class UI_MainMenu : MonoBehaviour
 
     private void Start()
     {
-        if (!SaveManager.instance.HasSaveFile())
-        {
-            continueButton.SetActive(false);
-        }
+        //if (!SaveManager.instance.HasSaveFile())
+        //{
+        //    continueButton.SetActive(false);
+        //}
     }
     public void ContinueGame()
     {

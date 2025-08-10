@@ -15,7 +15,7 @@ public class Dash_Skill : Skill
 
     [Header("DashCloneMore")]
     public bool dashCloneMorelocked = false;
-    public UI_SkillTreeSlot DashCloneMoreUnlockButton;
+    public UI_SkillTreeSlot dashCloneMoreUnlockButton;
 
 
     public override void UseSkill()
@@ -28,7 +28,7 @@ public class Dash_Skill : Skill
     {
         dashUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDash);
         dashCloneUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDashClone);
-        DashCloneMoreUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDashCloneMore);
+        dashCloneMoreUnlockButton.GetComponent<Button>().onClick.AddListener(UnlockDashCloneMore);
     }
     protected override void Start()
     {
@@ -61,7 +61,7 @@ public class Dash_Skill : Skill
 
     public void UnlockDashCloneMore()
     {
-        if (dashCloneUnlockButton.unlocked)
+        if (dashCloneMoreUnlockButton.unlocked)
         {
             dashCloneMorelocked = true;
         }

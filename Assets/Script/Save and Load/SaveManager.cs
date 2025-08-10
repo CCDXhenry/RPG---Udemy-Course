@@ -12,6 +12,7 @@ public class SaveManager : MonoBehaviour
     private List<ISaveManager> saveManagers;
 
     [SerializeField] private string fileName;
+    [SerializeField] private string filePath = "idbfs/huntresssofdjfnbjfbnj";
     private FileDataHandler fileHandler;
     [SerializeField] private bool isEcrypt;
 
@@ -26,7 +27,7 @@ public class SaveManager : MonoBehaviour
             Destroy(instance);
         }
         //实例化文件处理类
-        fileHandler = new FileDataHandler(Application.persistentDataPath, fileName, isEcrypt);
+        fileHandler = new FileDataHandler(filePath, fileName, isEcrypt);
     }
 
     private void Start()
@@ -43,7 +44,7 @@ public class SaveManager : MonoBehaviour
     [ContextMenu("Delect Save File")]
     public void DeleteSaveFile()
     {
-        fileHandler = new FileDataHandler(Application.persistentDataPath, fileName, isEcrypt);
+        fileHandler = new FileDataHandler(filePath, fileName, isEcrypt);
         fileHandler.Delete();
     }
 

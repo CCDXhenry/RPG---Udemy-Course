@@ -10,7 +10,7 @@ public class BODGroundState : EnemyState
     protected float minDistance = 3f; // Minimum distance to consider the player close enough to attack
     protected float distanceToPlayer;
     protected float distanceToPlayerX;
-    
+
     public BODGroundState(EnemyStateMachine stateMachine, Enemy enemyBase, string animBoolName, Enemy_BringerOfDeath enemy) : base(stateMachine, enemyBase, animBoolName)
     {
         this.enemy = enemy;
@@ -46,7 +46,7 @@ public class BODGroundState : EnemyState
             }
 
             //判断玩家是否在敌人的攻击范围内以及攻击冷却是否转好，切换到attackState攻击状态
-            if (enemy.CanAttackToPlayer() && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
+            if (distanceToPlayer <= Mathf.Abs(enemy.attackDistance) && (Time.time - enemy.lastTimeAttack) > enemy.attackCooldown)
             {
                 enemy.attackEnum = enemy.AttackProSelect();//随机选择攻击类型
                 if (enemy.attackEnum == BODAttackEnum.attackBefore)
@@ -59,7 +59,7 @@ public class BODGroundState : EnemyState
                     stateMachine.ChangeState(enemy.attackState);
                     Debug.Log("玩家在敌人的攻击范围内以及攻击冷却转好，切换到attackState攻击状态");
                 }
-                
+
                 return;
             }
 
@@ -92,24 +92,10 @@ public class BODGroundState : EnemyState
             {
                 enemy.Flip();
             }
-            if (animBoolName != "Move")
-            {
-                enemy.stateMachine.ChangeState(enemy.moveState);
-                Debug.Log("enemy与玩家的距离,大于最小距离,切换至Move状态");
-                return false;
-            }
+            return true;
         }
-        else
-        {
-            if (animBoolName != "Idle")
-            {
-                enemy.stateMachine.ChangeState(enemy.idleState);
-                Debug.Log("enemy与玩家的距离,小于最小距离,切换至idle状态");
-                return false;
-            }
+        return false;
 
-        }
-
-        return true;
+        
     }
 }

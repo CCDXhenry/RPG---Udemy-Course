@@ -1,0 +1,74 @@
+{
+    "currentSouls": 1912,
+    "lostSouls": 0,
+    "lostSoulsTransposition": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "currentCheckpointTransfrom": {
+        "x": -12.079999923706055,
+        "y": -1.159999966621399,
+        "z": 0.0
+    },
+    "sceneSpawnPoint": {
+        "serializedKeys": [],
+        "serializedValues": []
+    },
+    "inventory": {
+        "serializedKeys": [
+            "c9d44e0114b4b324d910fc51e2b0fecf",
+            "4ae58d2472af93a4992fa7fd910bd17a",
+            "49c8961fdb7d2d84a838ba5dd865e331",
+            "11e0e4fbc43d7f04bbddd68047856908",
+            "dbda02a25e4117749adc2a9235f819d8",
+            "441b3cc1f716a72438479a5251bb923e"
+        ],
+        "serializedValues": [
+            1,
+            3,
+            1,
+            1,
+            1,
+            4
+        ]
+    },
+    "equimentId": [
+        "11e0e4fbc43d7f04bbddd68047856908",
+        "c9d44e0114b4b324d910fc51e2b0fecf"
+    ],
+    "skillTree": {
+        "serializedKeys": [
+            "Dash",
+            "DashClone",
+            "",
+            "DashCloneMore"
+        ],
+        "serializedValues": [
+            true,
+            true,
+            false,
+            true
+        ]
+    },
+    "checkpoints": {
+        "serializedKeys": [
+            ""
+        ],
+        "serializedValues": [
+            true
+        ]
+    },
+    "volumeSlider": {
+        "serializedKeys": [
+            "overall",
+            "bgm",
+            "sfx"
+        ],
+        "serializedValues": [
+            0.75,
+            0.75,
+            0.75
+        ]
+    }
+}

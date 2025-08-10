@@ -59,11 +59,28 @@ public class BODAnimationTriggers : MonoBehaviour
         CloseCounterAttackWindow();
         AudioManager.instance.PlaySFX(1);
 
+        // 攻击方向判断
+        var playerTrans = PlayerManager.instance.player.transform;
+        float distanceToPlayerX = playerTrans.position.x - enemy.transform.position.x;
+        if (distanceToPlayerX > 0 && enemy.facingDirection < 0)
+        {
+            enemy.Flip();
+        }
+        else if (distanceToPlayerX < 0 && enemy.facingDirection > 0)
+        {
+            enemy.Flip();
+        }
+
+        //攻击位移
+        float offsetX = Random.Range(5f, 8f);
+        float offsetY = Random.Range(2f, 4f);
+        enemy.rb.velocity = new Vector2(enemy.facingDirection * offsetX, offsetY);
+
         //触发攻击特效
         if (enemy.TriggerAttackFx())
         {
-            float offsetX = -2.11f;
-            float offsetY = 0.32f;
+            offsetX = -2.11f;
+            offsetY = 0.32f;
             if (enemy.facingDirection > 0)
             {
                 offsetX = 2.126f;

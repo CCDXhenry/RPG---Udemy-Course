@@ -29,6 +29,10 @@ public class BODIdleState : BODGroundState
             //判断缓冲时间,尝试触发瞬移技能
             if (stateTime < 0)
             {
+                stateMachine.ChangeState(enemy.moveState);
+            }
+            else
+            {
                 bool triggerTeleport = Random.Range(0f, 1f) <= enemy.teleportProbability * Time.deltaTime;
                 if (triggerTeleport)
                 {
@@ -39,8 +43,8 @@ public class BODIdleState : BODGroundState
                     return;
                 }
             }
-            //判断enemy与玩家的距离,大于最小距离就切换至移动状态
-            CheckMinDistance();
+            ////判断enemy与玩家的距离,大于最小距离就切换至移动状态
+            //CheckMinDistance();
         }
     }
 

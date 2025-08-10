@@ -38,11 +38,14 @@ public class PlayerCounterAttackState : PlayerState
                 float combinedRange = player.attackCheckRadius + enemy.attackCheckRadius;
                 bool attackRangeOverlap = dist <= combinedRange;
 
-                if (enemy.CanBeStunned() && facingOpposite && attackRangeOverlap)
+                if (facingOpposite && attackRangeOverlap)
                 {
-                    stateTime = 10f;//弹反动作持续时间,防止招架动作结束改变状态
-                    player.anim.SetBool("SuccessfulCounterAttack", true);
-                    AudioManager.instance.PlaySFX(0);
+                    if (enemy.CanBeStunned())
+                    {
+                        stateTime = 10f;//弹反动作持续时间,防止招架动作结束改变状态
+                        player.anim.SetBool("SuccessfulCounterAttack", true);
+                        AudioManager.instance.PlaySFX(0);
+                    } 
                 }
             }
         }

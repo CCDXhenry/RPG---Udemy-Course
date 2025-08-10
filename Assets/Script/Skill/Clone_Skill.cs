@@ -9,8 +9,8 @@ public class Clone_Skill : Skill
     [SerializeField] private float cloneMultplePro;// 多重分身概率
     [SerializeField] private float cloneMultipleCounts; // 分身数量
     [Space]
-    [SerializeField] private bool canAttack; 
-    public void CreateClone(Transform _cloneTransform,Vector3 _offset,bool _ismultiple)
+    [SerializeField] private bool canAttack;
+    public void CreateClone(Transform _cloneTransform, Vector3 _offset, bool _ismultiple)
     {
         if (clonePrefab != null)
         {
