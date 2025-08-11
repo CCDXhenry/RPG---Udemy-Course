@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Player : Entity
 {
+    public VirtualJoystick joystick;
     [SerializeField] private GameObject hitFXPrefab;
     public Tilemap groundTilemap; // 绑定地面的Tilemap
     [Header("Move info")]

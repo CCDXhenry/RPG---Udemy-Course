@@ -42,7 +42,7 @@ public class PlayerGroundedState : PlayerState
             stateMachine.ChangeState(player.airState);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (UniversalButton.IsAttackPressed())
         {
             stateMachine.ChangeState(player.attackState);
         }

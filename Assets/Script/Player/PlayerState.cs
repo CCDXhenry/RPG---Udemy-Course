@@ -32,15 +32,21 @@ public class PlayerState
     public virtual void Exit()
     {
         player.anim.SetBool(animBoolName, false);
-        
+
     }
     public virtual void Update()
     {
-       
-       xInput = Input.GetAxisRaw("Horizontal");
-       yInput = Input.GetAxisRaw("Vertical");
-       player.anim.SetFloat("yVelocity", rb.velocity.y);
-       stateTime -= Time.deltaTime;
+
+        xInput = Input.GetAxisRaw("Horizontal");
+        yInput = Input.GetAxisRaw("Vertical");
+        if (player.joystick.gameObject.activeSelf)
+        {
+            xInput = player.joystick.Direction.x != 0 ? player.joystick.Direction.x : xInput;
+            yInput = player.joystick.Direction.y != 0 ? player.joystick.Direction.y : yInput;
+        }
+
+        player.anim.SetFloat("yVelocity", rb.velocity.y);
+        stateTime -= Time.deltaTime;
     }
 
     public virtual void AnimationFinishTrigger()
@@ -48,5 +54,4 @@ public class PlayerState
         triggerCalled = true;
     }
 
-    
 }
