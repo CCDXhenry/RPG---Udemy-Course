@@ -38,7 +38,9 @@ public class UI_HealthBar : MonoBehaviour
     private void Update_Health_UI()
     {
         slider.maxValue = stats.GetMaxHealthValue();
-        slider.value = stats.currentHealth;
+        if (stats.currentHealth >= 0)
+            slider.value = stats.currentHealth;
+        else slider.value = 0;
     }
 
     private void OnDestroy()

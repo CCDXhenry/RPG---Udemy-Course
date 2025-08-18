@@ -182,6 +182,7 @@ public class CharacterStats : MonoBehaviour
         isDead = true;
         Debug.Log($"{gameObject.name} has died.");
         entity.Die();
+        AudioManager.instance.PlaySFX(entity.diedSFX);
     }
 
     public Stat GetStat(StatType statType)

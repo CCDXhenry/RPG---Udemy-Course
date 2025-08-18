@@ -17,6 +17,8 @@ public enum BODAttackEnum
 }
 public class Enemy_BringerOfDeath : Enemy
 {
+    [Header("Ground Info")]
+    [SerializeField] private GameObject[] roadblock;
 
     //获取boss血条UI
     [SerializeField] private UI_Controller ui;
@@ -52,9 +54,9 @@ public class Enemy_BringerOfDeath : Enemy
     public float[] attackFxSpeed = { 4f, 8f, 12f };
     public float[] attackFxPro = { 0f, 0.5f, 0.8f };
 
-    
+
     //获取活动范围
-    [SerializeField] private PolygonCollider2D arenaCollider;
+    [SerializeField] private BoxCollider2D arenaCollider;
 
     //瞬移安全坐标
     [Header("Teleport Info")]
@@ -129,7 +131,7 @@ public class Enemy_BringerOfDeath : Enemy
             emission.rateOverTime = rateOverTimeArray[bossStage];
             AudioManager.instance.PlayBGM(bossStageBGMArray[bossStage]);
         }
-        
+
     }
 
     #region Calculate Probability
@@ -241,6 +243,14 @@ public class Enemy_BringerOfDeath : Enemy
             AudioManager.instance.PlayBGM(bossStageBGMArray[bossStage]);
             ui.inGameUI.GetComponent<UI_InGame>().enemyStats = GetComponent<EnemyStats>();
             ui.inGameUI.GetComponent<UI_InGame>().bossName.text = entityName;
+            for (int i = 0; i < roadblock.Length; i++)
+            {
+                Debug.Log(roadblock[i].activeInHierarchy);
+                if (!roadblock[i].activeInHierarchy)
+                {
+                    roadblock[i].SetActive(true);
+                }
+            }
         }
     }
 
@@ -250,13 +260,14 @@ public class Enemy_BringerOfDeath : Enemy
         if (isBattle)
         {
             isBattle = false;
-            AudioManager.instance.PlayBGM(0);
+            if (stateMachine.currentState.animBoolName != "Die")
+                AudioManager.instance.PlayBGM(0);
         }
     }
 
 
 
-    #region SaveTransPosition
+    #region SafeTransPosition
 
 
     /// <summary>
@@ -467,5 +478,5 @@ public class Enemy_BringerOfDeath : Enemy
         AudioManager.instance.PlayBGM(bossDiedBGM);
         darkAuraSmoke.gameObject.SetActive(false);
     }
-    
+
 }

@@ -67,4 +67,13 @@ public class Enemy_Skeleton : Enemy
         base.Die();
         stateMachine.ChangeState(deadState);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (stateMachine.currentState.animBoolName == "Move")
+        {
+            Flip();
+            stateMachine.ChangeState(idleState);
+        }
+    }
 }

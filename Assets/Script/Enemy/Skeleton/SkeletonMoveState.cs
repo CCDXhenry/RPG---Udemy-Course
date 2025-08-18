@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkeletonMoveState : SkeletonGroundedState
@@ -11,6 +12,7 @@ public class SkeletonMoveState : SkeletonGroundedState
     public override void Enter()
     {
         base.Enter();
+
     }
 
     public override void Exit()
@@ -22,10 +24,12 @@ public class SkeletonMoveState : SkeletonGroundedState
     {
         base.Update();
         enemy.SetVelocity(enemy.moveSpeed * enemy.facingDirection, enemy.rb.velocity.y);
+
         if (!enemy.IsGroundedDetected() || enemy.IsWallDetected())
         {
             enemy.Flip();
             stateMachine.ChangeState(enemy.idleState); // Transition to the idle state if no ground or wall detected
         }
     }
+
 }

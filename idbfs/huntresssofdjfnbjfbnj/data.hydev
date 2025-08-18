@@ -1,5 +1,5 @@
 {
-    "currentSouls": 1912,
+    "currentSouls": 5013,
     "lostSouls": 0,
     "lostSoulsTransposition": {
         "x": 0.0,
@@ -26,17 +26,14 @@
         ],
         "serializedValues": [
             1,
-            3,
             1,
             1,
             1,
-            4
+            1,
+            2
         ]
     },
-    "equimentId": [
-        "11e0e4fbc43d7f04bbddd68047856908",
-        "c9d44e0114b4b324d910fc51e2b0fecf"
-    ],
+    "equimentId": [],
     "skillTree": {
         "serializedKeys": [
             "Dash",

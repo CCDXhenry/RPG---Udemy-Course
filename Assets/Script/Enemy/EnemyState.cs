@@ -6,7 +6,7 @@ public class EnemyState
 {
     protected EnemyStateMachine stateMachine;
     protected Enemy enemyBase;
-    protected string animBoolName;
+    public string animBoolName;
     public float stateTime;
     public bool triggerCalled;
     protected Rigidbody2D rb;

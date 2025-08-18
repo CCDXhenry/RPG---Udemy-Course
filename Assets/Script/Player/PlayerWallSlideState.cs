@@ -21,11 +21,7 @@ public class PlayerWallSlideState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (!player.IsWallDetected())
-        {
-            stateMachine.ChangeState(player.idleState);
-            return;
-        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (xInput * player.facingDirection <= 0)
@@ -33,12 +29,10 @@ public class PlayerWallSlideState : PlayerState
             stateMachine.ChangeState(player.jumpState);
             return;
         }
-        if (xInput * player.facingDirection >= 0 && !player.IsGroundedDetected())
+        if (xInput * player.facingDirection > 0 && !player.IsGroundedDetected() && player.IsWallDetected())
         {
             if (xInput * player.facingDirection > 0)
                 player.SetVelocity(0f, rb.velocity.y * .4f);
-            else
-                player.SetVelocity(0f, rb.velocity.y * .8f);
         }
         else
         {

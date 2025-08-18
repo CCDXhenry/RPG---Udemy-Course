@@ -52,7 +52,6 @@ public class EnemyStats : CharacterStats
     public override void Die()
     {
         base.Die();
-
         // 掉落物品
         if (myDropSystem == null)
         {

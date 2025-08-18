@@ -28,9 +28,14 @@ public class PlayerStats : CharacterStats
         }
         PlayerManager.instance.currentSouls = 0;
         AudioManager.instance.PlaySFX(11);
-        AudioManager.instance.PlaySFX(20);
+        //AudioManager.instance.PlaySFX(20);
         //触发死亡动画
         base.Die();
     }
 
+    public override void TakeDamage(int _damage)
+    {
+        base.TakeDamage(_damage);
+        AudioManager.instance.PlaySFX(30);
+    }
 }

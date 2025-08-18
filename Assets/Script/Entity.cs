@@ -18,6 +18,7 @@ public class Entity : MonoBehaviour
     public string entityName;
     public Entitytype entityType;
     public float leaveGroundTime;
+    public int diedSFX;
     #region Components
     public Animator anim { get; private set; } // 动画控制器，用于处理实体的动画状态
     public Rigidbody2D rb { get; private set; } // 刚体2D组件，用于处理物理运动和碰撞

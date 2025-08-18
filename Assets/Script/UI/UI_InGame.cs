@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
-    
+    [SerializeField] private GameObject mobileUI;
 
     [SerializeField] private Slider healthBarPlayer;
     [SerializeField] private Slider healthBarBoss;
@@ -33,6 +33,11 @@ public class UI_InGame : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        mobileUI.SetActive(false);
+#elif UNITY_ANDROID || UNITY_IOS
+        mobileUI.SetActive(true);
+#endif
 
         playerStats = PlayerManager.instance.player.GetComponent<PlayerStats>();
         //enemyStats = GameObject.Find("Enemy_BringerOfDeath").GetComponent<EnemyStats>();

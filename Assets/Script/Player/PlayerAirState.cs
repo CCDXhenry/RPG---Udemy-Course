@@ -28,7 +28,7 @@ public class PlayerAirState : PlayerState
         {
             stateMachine.ChangeState(player.idleState);
         }
-        else if (player.IsWallDetected() && xInput * player.facingDirection >= 0)
+        else if (player.IsWallDetected() && xInput * player.facingDirection > 0)
         {
             stateMachine.ChangeState(player.wallSlideState);
         }
